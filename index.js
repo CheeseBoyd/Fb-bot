@@ -59,7 +59,6 @@ function receivedMessage(event) {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
-  var name = event.recipient.name;
   var message = event.message;
 
   console.log("Received message for user %d and page %d at %d with message:", 
@@ -82,7 +81,7 @@ function receivedMessage(event) {
         sendGenericMessage(senderID);
         break;
       case 'Hello':
-      	sendTextMessage(senderID, "Hi " + name);
+      	sendTextMessage(senderID, "Hi");
       	break;
       case 'Bot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
