@@ -91,7 +91,7 @@ function receivedMessage(event) {
       	sendTextMessage(senderID, "Good");
       	break;
       case 'push to master':
-      	sendTextMessage(senderID, "Authenticated");
+      	sendTextMessage(senderID, "Authenticated to master");
       	break;
       case 'push to test-deploy':
         sendTextMessage(senderID, "Authenticated to auto deploy");
