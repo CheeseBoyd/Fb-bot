@@ -59,6 +59,7 @@ function receivedMessage(event) {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
+  var name = event.sender.name;
   var message = event.message;
 
   console.log("Received message for user %d and page %d at %d with message:", 
@@ -70,6 +71,8 @@ function receivedMessage(event) {
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
+  // Need to parse message and filter out keywords
+
   if (messageText) {
 
     // If we receive a text message, check to see if it matches a keyword
@@ -79,7 +82,7 @@ function receivedMessage(event) {
         sendGenericMessage(senderID);
         break;
       case 'Hello':
-      	sendTextMessage(senderID, "Hi");
+      	sendTextMessage(senderID, "Hi " + name);
       	break;
       case 'Bot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
