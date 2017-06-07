@@ -93,6 +93,9 @@ function receivedMessage(event) {
       case 'push to master':
       	sendTextMessage(senderID, "Authenticated");
       	break;
+      case 'test remote on github':
+        sendTextMessage(senderID, "got it");
+        break;
       default:
         sendTextMessage(senderID, messageText);
     }
