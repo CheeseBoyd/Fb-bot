@@ -71,6 +71,7 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
 
   // Need to parse message and filter out keywords
+  messageText.toLowerCase();
 
   if (messageText) {
 
@@ -80,16 +81,16 @@ function receivedMessage(event) {
       case 'generic':
         sendGenericMessage(senderID);
         break;
-      case 'Hello':
+      case 'hello':
       	sendTextMessage(senderID, "Hi");
       	break;
-      case 'Bot':
+      case 'hot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
       	break;
-      case 'How are you?':
+      case 'how are you?':
       	sendTextMessage(senderID, "I'm a bot, are you Human?");
       	break;
-      case 'Yes':
+      case 'yes':
       	sendTextMessage(senderID, "Good");
       	break;
       case 'push to master':
