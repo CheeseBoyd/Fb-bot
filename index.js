@@ -81,7 +81,7 @@ function receivedMessage(event) {
         sendGenericMessage(senderID);
         break;
       case 'Hello':
-      	sendTextMessage(senderID, "Hi");
+      	sendTextMessage(senderID, "Hi hello");
       	break;
       case 'Bot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
