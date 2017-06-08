@@ -77,14 +77,6 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
 
   // Need to parse message and filter out keywords
-  var user
-  app.get('https://graph.facebook.com/v2.6/'+ senderID +'?access_token=PAGE_ACCESS_TOKEN', function(req, res) {
-  req.first_name = user;
-});
-  
-console.log("cheese " + name);
-
-
   if (messageText) {
 
     // If we receive a text message, check to see if it matches a keyword
