@@ -1,3 +1,7 @@
+/*
+* Load dependencies and secure access tokens
+*/
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
@@ -7,13 +11,14 @@ const access = process.env.FB_ACCESS_TOKEN
 
 app.set('port',(process.env.PORT || 5000))
 
-
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 app.get('/', function (req, res) {
 	res.send("Hello World")
 })
+
+// Have facebook verify the webhook
 
 app.get('/webhook/', function(req, res) {
 	if(req.query['hub.verify_token'] === token) {
@@ -22,6 +27,9 @@ app.get('/webhook/', function(req, res) {
 
 	res.send('No entry')
 })
+
+
+// Have facebook post on webhook
 
 app.post('/webhook', function (req, res) {
   var data = req.body;
@@ -60,17 +68,18 @@ function receivedMessage(event) {
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
   var message = event.message;
-
   console.log("Received message for user %d and page %d at %d with message:", 
     senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
 
   var messageId = message.mid;
-
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
   // Need to parse message and filter out keywords
+
+var user = app.get('https://graph.facebook.com/v2.6/'+ senderID +'?access_token=PAGE_ACCESS_TOKEN');
+console.log(user);
 
 
   if (messageText) {
