@@ -79,7 +79,7 @@ function receivedMessage(event) {
   // Need to parse message and filter out keywords
 
 var user = app.get('https://graph.facebook.com/v2.6/'+ senderID +'?access_token=PAGE_ACCESS_TOKEN');
-console.log(user);
+console.log("cheese " + user);
 
 
   if (messageText) {
