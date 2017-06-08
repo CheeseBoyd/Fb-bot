@@ -1,3 +1,7 @@
+/*
+* Load dependencies and secure access tokens
+*/
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
@@ -7,13 +11,14 @@ const access = process.env.FB_ACCESS_TOKEN
 
 app.set('port',(process.env.PORT || 5000))
 
-
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 app.get('/', function (req, res) {
 	res.send("Hello World")
 })
+
+// Have facebook verify the webhook
 
 app.get('/webhook/', function(req, res) {
 	if(req.query['hub.verify_token'] === token) {
@@ -22,6 +27,9 @@ app.get('/webhook/', function(req, res) {
 
 	res.send('No entry')
 })
+
+
+// Have facebook post on webhook
 
 app.post('/webhook', function (req, res) {
   var data = req.body;
@@ -60,34 +68,33 @@ function receivedMessage(event) {
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
   var message = event.message;
-
   console.log("Received message for user %d and page %d at %d with message:", 
     senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
 
   var messageId = message.mid;
-
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
+  // Need to parse message and filter out keywords
   if (messageText) {
 
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
-    switch (messageText) {
+    switch (messageText.toLowerCase()) {
       case 'generic':
         sendGenericMessage(senderID);
         break;
-      case 'Hello':
+      case 'hello':
       	sendTextMessage(senderID, "Hi");
       	break;
-      case 'Bot':
+      case 'hot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
       	break;
-      case 'How are you?':
+      case 'how are you?':
       	sendTextMessage(senderID, "I'm a bot, are you Human?");
       	break;
-      case 'Yes':
+      case 'yes':
       	sendTextMessage(senderID, "Good");
       	break;
       case 'push to master':
