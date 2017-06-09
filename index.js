@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 	res.send("Hello World")
 })
 
-// Have facebook verify the webhook
+// Have facebook verify the webhook token
 
 app.get('/webhook/', function(req, res) {
 	if(req.query['hub.verify_token'] === token) {
@@ -46,6 +46,8 @@ app.post('/webhook', function (req, res) {
       entry.messaging.forEach(function(event) {
         if (event.message) {
           receivedMessage(event);
+        } else if (event.postback) {
+          receivedPostback(event);
         } else {
           console.log("Webhook received unknown event: ", event);
         }
@@ -195,6 +197,25 @@ function callSendAPI(messageData) {
     }
   });  
 }
+
+function receivedPostback(event) {
+  var senderID = event.sender.id;
+  var recipientID = event.recipient.id;
+  var timeOfPostback = event.timestamp;
+
+  // The 'payload' param is a developer-defined field which is set in a postback 
+  // button for Structured Messages. 
+  var payload = event.postback.payload;
+
+  console.log("Received postback for user %d and page %d with payload '%s' " + 
+    "at %d", senderID, recipientID, payload, timeOfPostback);
+
+  // When a postback is called, we'll send a message back to the sender to 
+  // let them know it was successful
+  sendTextMessage(senderID, "Postback called");
+}
+
+
 
 app.listen(app.get('port'), function() {
 	console.log('Running on port', app.get('port'))
