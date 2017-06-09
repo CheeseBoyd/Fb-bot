@@ -126,7 +126,7 @@ function greeter(recipientId) {
   setting_type:"greeting",
   greeting:{
     text:"Hi {{user_first_name}}, welcome to this bot."
-  }
+  };
 
   callSendAPI(messageData);
 }
