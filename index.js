@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 	res.send("Hello World")
 })
 
-// Have facebook verify the webhook
+// Have facebook verify the webhook token
 
 app.get('/webhook/', function(req, res) {
 	if(req.query['hub.verify_token'] === token) {
@@ -44,8 +44,12 @@ app.post('/webhook', function (req, res) {
 
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
+      // if event is a message  
         if (event.message) {
           receivedMessage(event);
+      // if event is a postback    
+        } else if (event.postback) {
+          receivedPostback(event);
         } else {
           console.log("Webhook received unknown event: ", event);
         }
@@ -81,6 +85,7 @@ function receivedMessage(event) {
 
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
+    // should match agains keywords
     switch (messageText.toLowerCase()) {
       case 'generic':
         sendGenericMessage(senderID);
@@ -97,6 +102,9 @@ function receivedMessage(event) {
       case 'yes':
       	sendTextMessage(senderID, "Good");
       	break;
+      case 'ask color':
+        quickReply(senderID);
+        break;        
       case 'push to master':
       	sendTextMessage(senderID, "Authenticated to master");
       	break;
@@ -108,8 +116,14 @@ function receivedMessage(event) {
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
+  } else {
+    sendTextMessage(senderID, "I don't know that. I'm just a bot");
   } 
 }
+
+/*
+* Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
+*/
 
 function sendGenericMessage(recipientId, messageText) {
   var messageData = {
@@ -158,6 +172,36 @@ function sendGenericMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
+// use quick reply 
+function quickReply(recipientId) {
+  var messageData = {
+  recipient:{
+    id: recipientId
+  },
+  message:{
+    text:"Pick a color:",
+    quick_replies:[
+      {
+        content_type:"text",
+        title:"Red",
+        payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+      },
+      {
+        content_type:"text",
+        title:"Green",
+        payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+      }
+    ]
+  }
+}
+  callSendAPI(messageData);
+}
+
+
+/*
+* Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
+*/
+
 function sendTextMessage(recipientId, messageText) {
   var messageData = {
     recipient: {
@@ -192,6 +236,25 @@ function callSendAPI(messageData) {
     }
   });  
 }
+
+function receivedPostback(event) {
+  var senderID = event.sender.id;
+  var recipientID = event.recipient.id;
+  var timeOfPostback = event.timestamp;
+
+  // The 'payload' param is a developer-defined field which is set in a postback 
+  // button for Structured Messages. 
+  var payload = event.postback.payload;
+
+  console.log("Received postback for user %d and page %d with payload '%s' " + 
+    "at %d", senderID, recipientID, payload, timeOfPostback);
+
+  // When a postback is called, we'll send a message back to the sender to 
+  // let them know it was successful
+  sendTextMessage(senderID, "Postback called");
+}
+
+
 
 app.listen(app.get('port'), function() {
 	console.log('Running on port', app.get('port'))
