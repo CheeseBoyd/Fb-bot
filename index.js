@@ -126,11 +126,10 @@ function greeter(recipientId) {
   setting_type:"greeting",
   greeting:{
     text:"Hi {{user_first_name}}, welcome to this bot."
-  };
-
+  }
+};
   callSendAPI(messageData);
 }
-
 
 /*
 * Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
