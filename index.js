@@ -91,7 +91,7 @@ function receivedMessage(event) {
         sendGenericMessage(senderID);
         break;
       case 'hello':
-      	sendTextMessage(senderID, "Hi");
+      	greeter(senderID);
       	break;
       case 'hot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
@@ -120,6 +120,17 @@ function receivedMessage(event) {
     sendTextMessage(senderID, "I don't know that. I'm just a bot");
   } 
 }
+
+function greeter(recipientId) {
+ var messageData = {
+  setting_type:"greeting",
+  greeting:{
+    text:"Hi {{user_first_name}}, welcome to this bot."
+  }
+
+  callSendAPI(messageData);
+}
+
 
 /*
 * Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
