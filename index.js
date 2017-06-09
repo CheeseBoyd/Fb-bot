@@ -81,6 +81,7 @@ function receivedMessage(event) {
 
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
+    // should match agains keywords
     switch (messageText.toLowerCase()) {
       case 'generic':
         sendGenericMessage(senderID);
@@ -108,6 +109,8 @@ function receivedMessage(event) {
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
+  } else {
+    sendTextMessage(senderID, "I don't know that. I'm just a bot");
   } 
 }
 
