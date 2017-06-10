@@ -114,6 +114,9 @@ function receivedMessage(event) {
       case 'doom':
         sendImage(senderID);
         break;
+      case 'metal':
+        sendVideo(senderID);
+        break;
       default:
         sendTextMessage(senderID, messageText);
     }
@@ -134,6 +137,8 @@ function greeter(recipientId) {
   callSendAPI(messageData);
 }
 
+// sends img
+
 function sendImage(recipientId) {
   var messageData = {
   recipient:{
@@ -152,6 +157,28 @@ function sendImage(recipientId) {
 callSendAPI(messageData);
 
 }
+
+// sends vid
+
+function sendVideo(recipientId) {
+  var messageData = {
+  recipient:{
+    id: recipientId
+  },
+  message:{
+    attachment:{
+      type:"video",
+      payload:{
+        url:"https://youtu.be/a6BbvCC0VI0"
+      }
+    }
+  }
+}
+
+callSendAPI(messageData);
+
+}
+
 
 
 /*
