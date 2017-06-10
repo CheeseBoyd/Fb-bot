@@ -111,6 +111,9 @@ function receivedMessage(event) {
       case 'push to test-deploy':
         sendTextMessage(senderID, "Authenticated to test-deploy");
         break;
+      case 'doom':
+        sendImage(senderID);
+        break;
       default:
         sendTextMessage(senderID, messageText);
     }
@@ -120,7 +123,7 @@ function receivedMessage(event) {
     sendTextMessage(senderID, "I don't know that. I'm just a bot");
   } 
 }
-
+// Incomplete greeter: Does not personalize message
 function greeter(recipientId) {
  var messageData = {
   setting_type:"greeting",
@@ -130,6 +133,24 @@ function greeter(recipientId) {
 };
   callSendAPI(messageData);
 }
+
+function sendImage(recipientId) {
+  var messageData = {
+  recipient:{
+    id:"USER_ID"
+  },
+  message:{
+    attachment:{
+      type:"image",
+      payload:{
+        url:"https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg"
+      }
+    }
+  }
+}
+
+}
+
 
 /*
 * Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
@@ -203,7 +224,7 @@ function quickReply(recipientId) {
       }
     ]
   }
-}
+};
   callSendAPI(messageData);
 }
 
