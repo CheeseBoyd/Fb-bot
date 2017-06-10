@@ -149,6 +149,8 @@ function sendImage(recipientId) {
   }
 }
 
+callSendAPI(messageData);
+
 }
 
 
