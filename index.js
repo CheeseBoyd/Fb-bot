@@ -169,7 +169,7 @@ function sendVideo(recipientId) {
     attachment:{
       type:"video",
       payload:{
-        url:"https://youtu.be/a6BbvCC0VI0"
+        url:"https://www.youtube.com/watch?v=LhIS4FdS7co"
       }
     }
   }
