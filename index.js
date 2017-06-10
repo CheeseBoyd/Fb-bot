@@ -87,6 +87,9 @@ function receivedMessage(event) {
     // and send back the example. Otherwise, just echo the text we received.
     // should match agains keywords
     switch (messageText.toLowerCase()) {
+      case 'help':
+        quickReply(senderID);
+      break;
       case 'generic':
         sendGenericMessage(senderID);
         break;
@@ -103,7 +106,7 @@ function receivedMessage(event) {
       	sendTextMessage(senderID, "Good");
       	break;
       case 'ask color':
-        quickReply(senderID);
+        quickReply(senderID, "choose", "red", "blue");
         break;        
       case 'push to master':
       	sendTextMessage(senderID, "Authenticated to master");
@@ -233,22 +236,22 @@ function sendGenericMessage(recipientId, messageText) {
 }
 
 // use quick reply 
-function quickReply(recipientId) {
+function quickReply(recipientId, ask, option1, option2) {
   var messageData = {
   recipient:{
     id: recipientId
   },
   message:{
-    text:"Pick a color:",
+    text:ask,
     quick_replies:[
       {
         content_type:"text",
-        title:"Red",
+        title: option1,
         payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
       },
       {
         content_type:"text",
-        title:"Green",
+        title:option2,
         payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
       }
     ]
