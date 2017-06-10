@@ -44,8 +44,13 @@ app.post('/webhook', function (req, res) {
 
       // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
+      // if event is a message  
         if (event.message) {
           receivedMessage(event);
+<<<<<<< HEAD
+=======
+      // if event is a postback    
+>>>>>>> test-deploy
         } else if (event.postback) {
           receivedPostback(event);
         } else {
@@ -89,7 +94,7 @@ function receivedMessage(event) {
         sendGenericMessage(senderID);
         break;
       case 'hello':
-      	sendTextMessage(senderID, "Hi");
+      	greeter(senderID);
       	break;
       case 'hot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
@@ -100,11 +105,17 @@ function receivedMessage(event) {
       case 'yes':
       	sendTextMessage(senderID, "Good");
       	break;
+      case 'ask color':
+        quickReply(senderID);
+        break;        
       case 'push to master':
       	sendTextMessage(senderID, "Authenticated to master");
       	break;
       case 'push to test-deploy':
         sendTextMessage(senderID, "Authenticated to test-deploy");
+        break;
+      case 'doom':
+        sendImage(senderID);
         break;
       default:
         sendTextMessage(senderID, messageText);
@@ -115,6 +126,40 @@ function receivedMessage(event) {
     sendTextMessage(senderID, "I don't know that. I'm just a bot");
   } 
 }
+// Incomplete greeter: Does not personalize message
+function greeter(recipientId) {
+ var messageData = {
+  setting_type:"greeting",
+  greeting:{
+    text:"Hi {{user_first_name}}, welcome to this bot."
+  }
+};
+  callSendAPI(messageData);
+}
+
+function sendImage(recipientId) {
+  var messageData = {
+  recipient:{
+    id: recipientId
+  },
+  message:{
+    attachment:{
+      type:"image",
+      payload:{
+        url:"https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg"
+      }
+    }
+  }
+}
+
+callSendAPI(messageData);
+
+}
+
+
+/*
+* Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
+*/
 
 function sendGenericMessage(recipientId, messageText) {
   var messageData = {
@@ -162,6 +207,36 @@ function sendGenericMessage(recipientId, messageText) {
 
   callSendAPI(messageData);
 }
+
+// use quick reply 
+function quickReply(recipientId) {
+  var messageData = {
+  recipient:{
+    id: recipientId
+  },
+  message:{
+    text:"Pick a color:",
+    quick_replies:[
+      {
+        content_type:"text",
+        title:"Red",
+        payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+      },
+      {
+        content_type:"text",
+        title:"Green",
+        payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+      }
+    ]
+  }
+};
+  callSendAPI(messageData);
+}
+
+
+/*
+* Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
+*/
 
 function sendTextMessage(recipientId, messageText) {
   var messageData = {
