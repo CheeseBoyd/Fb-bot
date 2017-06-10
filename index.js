@@ -137,7 +137,7 @@ function greeter(recipientId) {
 function sendImage(recipientId) {
   var messageData = {
   recipient:{
-    id:"USER_ID"
+    id: recipientId
   },
   message:{
     attachment:{
