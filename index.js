@@ -105,8 +105,8 @@ function receivedMessage(event) {
       case 'yes':
       	sendTextMessage(senderID, "Good");
       	break;
-      case 'ask color':
-        quickReply(senderID, "choose", "red", "blue");
+      case 'menu':
+        quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
         break;        
       case 'push to master':
       	sendTextMessage(senderID, "Authenticated to master");
