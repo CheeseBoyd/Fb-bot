@@ -129,6 +129,7 @@ function receivedMessage(event) {
     sendTextMessage(senderID, "I don't know that. I'm just a bot");
   } 
 }
+
 // Incomplete greeter: Does not personalize message
 function greeter(recipientId) {
  var messageData = {
