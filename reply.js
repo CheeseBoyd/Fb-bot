@@ -7,7 +7,7 @@ module.exports = {
 	// Remember that they are objects are you are declaring methods
 	// response to quick reply trigger
 
-	function quickReply(recipientId, ask, option1, option2, option3, option4, option5) {
+	quickReply: function(recipientId, ask, option1, option2, option3, option4, option5) {
 		var messageData = null;
 
 		if (option3) {

@@ -91,7 +91,7 @@ function receivedMessage(event) {
     // should match agains keywords
     switch (messageText) {
       case 'help':
-        quickReply(senderID, "you need help with?", "english", "math", "geometry", " science");
+        typeof reply.quickReply(senderID, "you need help with?", "english", "math", "geometry", " science");
       break;
       case 'generic':
         sendGenericMessage(senderID);
