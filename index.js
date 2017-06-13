@@ -9,8 +9,8 @@ const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
 
-var vocabulary = require('./vocbulary.js')
-typeof vocbulary.test();
+var vocabulary = require('./vocabulary.js')
+typeof vocabulary.test();
 
 
 app.set('port',(process.env.PORT || 5000))

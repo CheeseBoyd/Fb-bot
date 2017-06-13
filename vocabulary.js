@@ -7,7 +7,7 @@ module.exports = {
 	// Remember that they are objects are you are declaring methods
 
 		test: function() {
-			console.log("cheese");
+			console.log("cheese is good, good is cheeese");
 		},
 
 		phraseParser: function(senderID, messageText){
