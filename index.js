@@ -8,9 +8,10 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
-
+/*
 const vocabulary = require('./vocabulary.js')
 const reply = require('./reply.js')
+*/
 
 app.set('port',(process.env.PORT || 5000))
 
@@ -88,11 +89,10 @@ function receivedMessage(event) {
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     // should match agains keywords
-    switch (messageText) {
-      case 'help':
-        typeof reply.quickReply(senderID, "you need help with?", "english", "math", "geometry","arts", "humanities");
-      break;
     switch (messageText.toLowerCase()) {
+      case 'help':
+        quickReply(senderID, "you need help with?", "english", "math", "geometry","arts", "humanities");
+      break;      
       case 'generic':
         sendGenericMessage(senderID);
         break;
@@ -135,7 +135,7 @@ function greeter(recipientId) {
  var messageData = {
   setting_type:"greeting",
   greeting:{
-    text:"Hi {{user_first_name}}, welcome to this bot."
+    text:"Hi, welcome to this bot."
   }
 };
   callSendAPI(messageData);
@@ -184,7 +184,6 @@ callSendAPI(messageData);
 }
 
 // Quick reply
-/*
   function quickReply(recipientId, ask, option1, option2, option3, option4, option5) {
     var messageData = null;
 
@@ -318,7 +317,6 @@ callSendAPI(messageData);
 
   }
 
-*/
 
 /*
 * Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
