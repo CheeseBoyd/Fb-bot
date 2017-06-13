@@ -8,6 +8,7 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
+const vocabulary = require('./vocbulary')
 
 app.set('port',(process.env.PORT || 5000))
 
@@ -86,7 +87,7 @@ function receivedMessage(event) {
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     // should match agains keywords
-    switch (messageText.toLowerCase()) {
+    switch (messageText) {
       case 'help':
         quickReply(senderID);
       break;
@@ -318,6 +319,8 @@ function receivedPostback(event) {
   sendTextMessage(senderID, "Postback called");
 }
 
+
+typeof vocbulary.test();
 
 
 app.listen(app.get('port'), function() {
