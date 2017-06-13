@@ -90,7 +90,7 @@ function receivedMessage(event) {
     // should match agains keywords
     switch (messageText) {
       case 'help':
-        quickReply(senderID, "you need help with?", "english", "math", "geometry","arts");
+        quickReply(senderID, "you need help with?", "english", "math", "geometry","arts", "humanities");
       break;
       case 'generic':
         sendGenericMessage(senderID);
