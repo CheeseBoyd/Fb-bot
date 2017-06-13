@@ -319,9 +319,9 @@ function showLinks(recipientId) {
               type: "postback",
               title: "Call Postback",
               payload: "Payload for first bubble",
-            }],
+            }]
           }
-        
+        }
       }
     }
   };  
