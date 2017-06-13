@@ -321,7 +321,7 @@ function showLinks(recipientId) {
               payload: "Payload for first bubble",
             }],
           }
-        }
+        
       }
     }
   };  
