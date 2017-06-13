@@ -308,7 +308,7 @@ function showLinks(recipientId) {
           elements: [{
             title: "Visit Us",
             subtitle: "Located at Manlia Bulletin Ground floor lobby",
-            item_url: "https://web.facebook.com/PaperPlusCupCoffee/photos/a.1260629573985279.1073741827.1142071892507715/1334458439935725/?type=3",               
+            item_url: "https://web.facebook.com/PaperPlusCupCoffee/",               
             image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG",
             buttons: [{
               type: "web_url",
