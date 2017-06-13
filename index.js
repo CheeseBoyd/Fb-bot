@@ -92,8 +92,7 @@ function receivedMessage(event) {
         sendGenericMessage(senderID);
         break;
       case 'hello':
-      	sendTextMessage(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you");
-        quickReply(senderID, "So. what would you like?", "try products", "get news");
+        quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
       	break;
       case 'try products':
         showLinks(senderID);
