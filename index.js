@@ -320,7 +320,7 @@ function showLinks(recipientId) {
               title: "Call Postback",
               payload: "Payload for first bubble",
             }]
-          }
+          }]
         }
       }
     }
