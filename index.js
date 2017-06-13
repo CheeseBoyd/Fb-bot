@@ -8,7 +8,10 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
-const vocabulary = require('./vocbulary')
+
+var vocabulary = require('./vocbulary.js')
+typeof vocbulary.test();
+
 
 app.set('port',(process.env.PORT || 5000))
 
@@ -319,8 +322,6 @@ function receivedPostback(event) {
   sendTextMessage(senderID, "Postback called");
 }
 
-
-typeof vocbulary.test();
 
 
 app.listen(app.get('port'), function() {
