@@ -10,7 +10,7 @@ const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
 
 const vocabulary = require('./vocabulary.js')
-
+const reply = require('./reply.js')
 
 app.set('port',(process.env.PORT || 5000))
 
@@ -183,7 +183,7 @@ callSendAPI(messageData);
 }
 
 // Quick reply
-
+/*
   function quickReply(recipientId, ask, option1, option2, option3, option4, option5) {
     var messageData = null;
 
@@ -316,6 +316,8 @@ callSendAPI(messageData);
     }
 
   }
+
+*/
 
 /*
 * Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
