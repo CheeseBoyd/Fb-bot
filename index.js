@@ -50,7 +50,6 @@ app.post('/webhook', function (req, res) {
       // if event is a message  
         if (event.message) {
           receivedMessage(event);
-      // if event is a postback    
         } else if (event.postback) {
           receivedPostback(event);
         } else {
@@ -85,6 +84,7 @@ function receivedMessage(event) {
   // Need to parse message and filter out keywords
   if (messageText) {
 
+    // Need vocabulary and parser
     // If we receive a text message, check to see if it matches a keyword
     // and send back the example. Otherwise, just echo the text we received.
     // should match agains keywords
@@ -92,6 +92,7 @@ function receivedMessage(event) {
       case 'help':
         typeof reply.quickReply(senderID, "you need help with?", "english", "math", "geometry","arts", "humanities");
       break;
+    switch (messageText.toLowerCase()) {
       case 'generic':
         sendGenericMessage(senderID);
         break;
