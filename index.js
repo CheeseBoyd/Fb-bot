@@ -10,7 +10,6 @@ const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
 
 var vocabulary = require('./vocabulary.js')
-typeof vocabulary.test();
 
 
 app.set('port',(process.env.PORT || 5000))
@@ -69,7 +68,6 @@ app.post('/webhook', function (req, res) {
   }
 });
 
-// I added a comment
 
 function receivedMessage(event) {
   var senderID = event.sender.id;
@@ -86,47 +84,8 @@ function receivedMessage(event) {
 
   // Need to parse message and filter out keywords
   if (messageText) {
+    typeof vocabulary.tokenParser(messageText);
 
-    // If we receive a text message, check to see if it matches a keyword
-    // and send back the example. Otherwise, just echo the text we received.
-    // should match agains keywords
-    switch (messageText) {
-      case 'help':
-        quickReply(senderID);
-      break;
-      case 'generic':
-        sendGenericMessage(senderID);
-        break;
-      case 'hello':
-      	greeter(senderID);
-      	break;
-      case 'hot':
-      	sendTextMessage(senderID, "Yup, I'm a bot");
-      	break;
-      case 'how are you?':
-      	sendTextMessage(senderID, "I'm a bot, are you Human?");
-      	break;
-      case 'yes':
-      	sendTextMessage(senderID, "Good");
-      	break;
-      case 'menu':
-        quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
-        break;        
-      case 'push to master':
-      	sendTextMessage(senderID, "Authenticated to master");
-      	break;
-      case 'push to test-deploy':
-        sendTextMessage(senderID, "Authenticated to test-deploy");
-        break;
-      case 'doom':
-        sendImage(senderID);
-        break;
-      case 'metal':
-        sendVideo(senderID);
-        break;
-      default:
-        sendTextMessage(senderID, messageText);
-    }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   } else {

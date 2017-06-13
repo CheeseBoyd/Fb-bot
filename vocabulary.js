@@ -6,10 +6,6 @@ module.exports = {
 	// Stuff you want to export here
 	// Remember that they are objects are you are declaring methods
 
-		test: function() {
-			console.log("cheese is good, good is cheeese");
-		},
-
 		phraseParser: function(senderID, messageText){
 		if( /((how are you\?)|(how are you)|((are you\?)|(you\?)))/gi.test(messageText) ) {
 		    sendTextMessage(senderID, "I'm a bot, are you Human?");		
