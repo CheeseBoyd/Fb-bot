@@ -84,8 +84,44 @@ function receivedMessage(event) {
 
   // Need to parse message and filter out keywords
   if (messageText) {
-    typeof vocabulary.tokenParser(messageText);
 
+    // If we receive a text message, check to see if it matches a keyword
+    // and send back the example. Otherwise, just echo the text we received.
+    // should match agains keywords
+    switch (messageText) {
+      case 'help':
+        quickReply(senderID, "you need help with?", "english", "math");
+      break;
+      case 'generic':
+        sendGenericMessage(senderID);
+        break;
+      case 'hello':
+      	greeter(senderID);
+      	break;
+      case 'hot':
+      	sendTextMessage(senderID, "Yup, I'm a bot");
+      	break;
+      case 'how are you?':
+      	sendTextMessage(senderID, "I'm a bot, are you Human?");
+      	break;
+      case 'yes':
+      	sendTextMessage(senderID, "Good");
+      	break;
+      case 'menu':
+        quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
+        break;        
+      case 'push to master':
+      	sendTextMessage(senderID, "Authenticated to master");
+      	break;
+      case 'push to test-deploy':
+        sendTextMessage(senderID, "Authenticated to test-deploy");
+        break;
+      case 'doom':
+        sendImage(senderID);
+        break;
+      default:
+        sendTextMessage(senderID, messageText);
+    }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   } else {
@@ -199,7 +235,8 @@ function sendGenericMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-// use quick reply 
+// use quick reply
+// Quick reply can only hold a maximum of 5 
 function quickReply(recipientId, ask, option1, option2) {
   var messageData = {
   recipient:{
