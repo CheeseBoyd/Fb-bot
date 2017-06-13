@@ -95,7 +95,7 @@ function receivedMessage(event) {
         quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
       	break;
       case 'try products':
-        showLinks(senderID);
+        singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
         quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
         break;
       case 'Here':
@@ -293,9 +293,7 @@ callSendAPI(messageData);
   }
 
 
-
-
-function showLinks(recipientId) {
+function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
   var messageData = {
     recipient: {
       id: recipientId
@@ -306,14 +304,14 @@ function showLinks(recipientId) {
         payload: {
           template_type: "generic",
           elements: [{
-            title: "Visit Us",
-            subtitle: "Located at Manlia Bulletin Ground floor lobby",
-            item_url: "https://web.facebook.com/PaperPlusCupCoffee/",               
-            image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG",
+            title: title,
+            subtitle: subTitle,
+            item_url: url,               
+            image_url: imgUrl,
             buttons: [{
               type: "web_url",
-              url: "https://web.facebook.com/PaperPlusCupCoffee/photos/a.1260629573985279.1073741827.1142071892507715/1334458439935725/?type=3",
-              title: "See our page!"
+              url: url,
+              title: button1
             }, {
               type: "postback",
               title: "Call Postback",
