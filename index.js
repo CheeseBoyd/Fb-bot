@@ -9,7 +9,8 @@ const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
 
-var vocabulary = require('./vocabulary.js')
+const vocabulary = require('./vocabulary.js')
+const reply = require('./reply.js')
 
 
 app.set('port',(process.env.PORT || 5000))
@@ -90,7 +91,7 @@ function receivedMessage(event) {
     // should match agains keywords
     switch (messageText) {
       case 'help':
-        quickReply(senderID, "you need help with?", "english", "math");
+        quickReply(senderID, "you need help with?", "english", "math", "geometry", " science");
       break;
       case 'generic':
         sendGenericMessage(senderID);
@@ -235,36 +236,6 @@ function sendGenericMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-// use quick reply
-// Quick reply can only hold a maximum of 5 
-function quickReply(recipientId, ask, option1, option2) {
-  var messageData = {
-  recipient:{
-    id: recipientId
-  },
-  message:{
-    text:ask,
-    quick_replies:[
-      {
-        content_type:"text",
-        title: option1,
-        payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-      },
-      {
-        content_type:"text",
-        title:option2,
-        payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-      }
-    ]
-  }
-};
-  callSendAPI(messageData);
-}
-
-
-/*
-* Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
-*/
 
 function sendTextMessage(recipientId, messageText) {
   var messageData = {
