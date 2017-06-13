@@ -82,24 +82,30 @@ function receivedMessage(event) {
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
-  // Need to parse message and filter out keywords
   if (messageText) {
 
-    // Need vocabulary and parser
-    // If we receive a text message, check to see if it matches a keyword
-    // and send back the example. Otherwise, just echo the text we received.
-    // should match agains keywords
     switch (messageText.toLowerCase()) {
       case 'help':
-        quickReply(senderID, "you need help with?", "english", "math", "geometry","arts", "humanities");
+          sendTextMessage(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you");
       break;      
       case 'generic':
         sendGenericMessage(senderID);
         break;
       case 'hello':
-      	greeter(senderID);
+      	sendTextMessage(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you");
+        quickReply(senderID, "So. what would you like?", "try products", "get news");
       	break;
-      case 'hot':
+      case 'try products':
+        showLinks(senderID);
+        quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
+        break;
+      case 'Here':
+        quickReply(senderID, "Okay. What will you have?", "Black Tea", "Caramel Frapp", "Black brewed","Berry Tea");
+        break;
+      case 'I\'ll go there':
+        sendTextMessage(senderID, "Okay. Were at the ground floor lobby. Bye!");
+        break;
+      case 'bot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
       	break;
       case 'how are you?':
@@ -118,10 +124,10 @@ function receivedMessage(event) {
         sendTextMessage(senderID, "Authenticated to test-deploy");
         break;
       case 'doom':
-        sendImage(senderID);
+        sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
         break;
       default:
-        sendTextMessage(senderID, messageText);
+        sendTextMessage(senderID, "I'm sorry I don't know what you meant in: " + messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -130,20 +136,8 @@ function receivedMessage(event) {
   } 
 }
 
-// Incomplete greeter: Does not personalize message
-function greeter(recipientId) {
- var messageData = {
-  setting_type:"greeting",
-  greeting:{
-    text:"Hi, welcome to this bot."
-  }
-};
-  callSendAPI(messageData);
-}
 
-// sends img
-
-function sendImage(recipientId) {
+function sendImage(recipientId, url) {
   var messageData = {
   recipient:{
     id: recipientId
@@ -152,7 +146,7 @@ function sendImage(recipientId) {
     attachment:{
       type:"image",
       payload:{
-        url:"https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg"
+        url: url,
       }
     }
   }
@@ -162,28 +156,10 @@ callSendAPI(messageData);
 
 }
 
-// sends vid
-
-function sendVideo(recipientId) {
-  var messageData = {
-  recipient:{
-    id: recipientId
-  },
-  message:{
-    attachment:{
-      type:"video",
-      payload:{
-        url:"https://www.youtube.com/watch?v=LhIS4FdS7co"
-      }
-    }
-  }
-}
-
-callSendAPI(messageData);
-
-}
-
-// Quick reply
+/*
+* Adds quick reply functionality:
+* Can give up to 5 options
+*/
   function quickReply(recipientId, ask, option1, option2, option3, option4, option5) {
     var messageData = null;
 
@@ -318,11 +294,42 @@ callSendAPI(messageData);
   }
 
 
-/*
-* Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
-*/
 
-function sendGenericMessage(recipientId, messageText) {
+
+function showLinks(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: "Visit Us",
+            subtitle: "Located at Manlia Bulletin Ground floor lobby",
+            item_url: "https://web.facebook.com/PaperPlusCupCoffee/photos/a.1260629573985279.1073741827.1142071892507715/1334458439935725/?type=3",               
+            image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG",
+            buttons: [{
+              type: "web_url",
+              url: "https://web.facebook.com/PaperPlusCupCoffee/photos/a.1260629573985279.1073741827.1142071892507715/1334458439935725/?type=3",
+              title: "See our page!"
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for first bubble",
+            }],
+          }
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+}
+
+function sendGenericMessage(recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
