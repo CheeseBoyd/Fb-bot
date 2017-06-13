@@ -47,10 +47,10 @@ app.post('/webhook', function (req, res) {
       // if event is a message  
         if (event.message) {
           receivedMessage(event);
-<<<<<<< HEAD
-=======
+
+
       // if event is a postback    
->>>>>>> test-deploy
+
         } else if (event.postback) {
           receivedPostback(event);
         } else {
