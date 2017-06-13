@@ -10,7 +10,6 @@ const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
 
 const vocabulary = require('./vocabulary.js')
-const reply = require('./reply.js')
 
 
 app.set('port',(process.env.PORT || 5000))
@@ -91,7 +90,7 @@ function receivedMessage(event) {
     // should match agains keywords
     switch (messageText) {
       case 'help':
-        typeof reply.quickReply(senderID, "you need help with?", "english", "math", "geometry", " science");
+        quickReply(senderID, "you need help with?", "english", "math", "geometry", " science");
       break;
       case 'generic':
         sendGenericMessage(senderID);
@@ -183,7 +182,140 @@ callSendAPI(messageData);
 
 }
 
+// Quick reply
 
+  function quickReply(recipientId, ask, option1, option2, option3, option4, option5) {
+    var messageData = null;
+
+    if (option3) {
+
+        messageData = {
+        recipient:{
+          id: recipientId
+        },
+        message:{
+          text:ask,
+          quick_replies:[
+            {
+              content_type:"text",
+              title: option1,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title:option2,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+            },
+            {
+              content_type:"text",
+              title: option3,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            }         
+          ]
+        }
+      };
+      callSendAPI(messageData);
+
+    } else if (option3 && option4) {
+
+        messageData = {
+        recipient:{
+          id: recipientId
+        },
+        message:{
+          text:ask,
+          quick_replies:[
+            {
+              content_type:"text",
+              title: option1,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title:option2,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+            },
+            {
+              content_type:"text",
+              title: option3,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title: option4,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            }                   
+          ]
+        }
+      };
+      callSendAPI(messageData);   
+
+    } else if((option3 && option4)&&option5) {
+
+        messageData = {
+        recipient:{
+          id: recipientId
+        },
+        message:{
+          text:ask,
+          quick_replies:[
+            {
+              content_type:"text",
+              title: option1,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title:option2,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+            },
+            {
+              content_type:"text",
+              title: option3,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title: option4,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title: option5,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },                              
+          ]
+        }
+      };
+      callSendAPI(messageData);     
+
+    } else {
+
+        messageData = {
+        recipient:{
+          id: recipientId
+        },
+        message:{
+          text:ask,
+          quick_replies:[
+            {
+              content_type:"text",
+              title: option1,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title:option2,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+            }
+          ]
+        }
+      };
+      callSendAPI(messageData);
+
+    }
+
+  }
 
 /*
 * Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
@@ -271,7 +403,6 @@ function callSendAPI(messageData) {
     }
   });  
 }
-
 
 function receivedPostback(event) {
   var senderID = event.sender.id;
