@@ -126,7 +126,7 @@ function receivedMessage(event) {
         sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
         break;
       default:
-        sendImage("https://19818-presscdn-pagely.netdna-ssl.com/wp-content/uploads/57f/6c/9055ebfa31c8550e-e1494349501884.jpg");
+        sendImage(senderID, "https://19818-presscdn-pagely.netdna-ssl.com/wp-content/uploads/57f/6c/9055ebfa31c8550e-e1494349501884.jpg");
         sendTextMessage(senderID, (messageText)=> {
           let tokenizer = messageText.split(/\s/gi);
           let out = tokenizer.join("");
