@@ -126,7 +126,7 @@ function receivedMessage(event) {
         sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
         break;
       default:
-        sendTextMessage(senderID, "¯\\_(ツ)_/¯ I don't know what you meant by - " + messageText);
+        sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
