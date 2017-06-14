@@ -127,7 +127,10 @@ function receivedMessage(event) {
         break;
       default:
         sendImage(senderID, "https://19818-presscdn-pagely.netdna-ssl.com/wp-content/uploads/57f/6c/9055ebfa31c8550e-e1494349501884.jpg");
-        sendTextMessage(senderID, fun(messageText));
+        sendTextMessage(senderID, ()=> {
+          let tokenizer = messageText.split(/\s/gi);
+          return tokenizer.join("");
+        });
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -135,13 +138,6 @@ function receivedMessage(event) {
     sendTextMessage(senderID, "I don't know that. I'm just a bot");
   } 
 }
-
-
-let fun = (messageText)=> {
-          let tokenizer = messageText.split(/\s/gi);
-          let out = tokenizer.join("");
-          return out;
-};
 
 function sendImage(recipientId, url) {
   var messageData = {
