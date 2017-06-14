@@ -126,8 +126,7 @@ function receivedMessage(event) {
         sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
         break;
       default:
-        sendImage(senderID, "https://19818-presscdn-pagely.netdna-ssl.com/wp-content/uploads/57f/6c/9055ebfa31c8550e-e1494349501884.jpg");
-        sendTextMessage(senderID, fun(messageText));
+        sendTextMessage(senderID, "¯\\_(ツ)_/¯ I don't know what you meant by - " + messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -153,6 +152,7 @@ function sendImage(recipientId, url) {
       type:"image",
       payload:{
         url: url,
+        is_reusable: true
       }
     }
   }
