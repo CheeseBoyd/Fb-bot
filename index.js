@@ -126,7 +126,11 @@ function receivedMessage(event) {
         sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
         break;
       default:
-        sendTextMessage(senderID, "I'm sorry I don't know what you meant in: " + messageText);
+        sendImage("https://uproxx.files.wordpress.com/2017/05/mocking-spongebob.jpg?quality=100&w=650");
+        sendTextMessage(senderID, (messageText)=> {
+          let tokenizer = messageText.split(/\s/gi);
+          return tokenizer.join("");
+        });
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
