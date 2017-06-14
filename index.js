@@ -129,7 +129,8 @@ function receivedMessage(event) {
         sendImage("https://uproxx.files.wordpress.com/2017/05/mocking-spongebob.jpg?quality=100&w=650");
         sendTextMessage(senderID, (messageText)=> {
           let tokenizer = messageText.split(/\s/gi);
-          return tokenizer.join("");
+          let out = tokenizer.join("");
+          return out;
         });
     }
   } else if (messageAttachments) {
