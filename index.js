@@ -127,11 +127,7 @@ function receivedMessage(event) {
         break;
       default:
         sendImage(senderID, "https://19818-presscdn-pagely.netdna-ssl.com/wp-content/uploads/57f/6c/9055ebfa31c8550e-e1494349501884.jpg");
-        sendTextMessage(senderID, (messageText)=> {
-          let tokenizer = messageText.split(/\s/gi);
-          let out = tokenizer.join("");
-          return out;
-        });
+        sendTextMessage(senderID, fun(messageText));
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -140,6 +136,12 @@ function receivedMessage(event) {
   } 
 }
 
+
+let fun = (messageText)=> {
+          let tokenizer = messageText.split(/\s/gi);
+          let out = tokenizer.join("");
+          return out;
+};
 
 function sendImage(recipientId, url) {
   var messageData = {
