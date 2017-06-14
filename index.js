@@ -130,7 +130,7 @@ function receivedMessage(event) {
         sendTextMessage(senderID, (messageText)=> {
           let tokenizer = messageText.split(/\s/gi);
           let out = tokenizer.join("");
-          return out;
+          return out.toString();
         });
     }
   } else if (messageAttachments) {
