@@ -8,6 +8,10 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
+/*
+const vocabulary = require('./vocabulary.js')
+const reply = require('./reply.js')
+*/
 
 app.set('port',(process.env.PORT || 5000))
 
@@ -47,10 +51,7 @@ app.post('/webhook', function (req, res) {
       // if event is a message  
         if (event.message) {
           receivedMessage(event);
-
-
       // if event is a postback    
-
         } else if (event.postback) {
           receivedPostback(event);
         } else {
@@ -68,7 +69,6 @@ app.post('/webhook', function (req, res) {
   }
 });
 
-// I added a comment
 
 function receivedMessage(event) {
   var senderID = event.sender.id;
@@ -83,19 +83,29 @@ function receivedMessage(event) {
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
-  // Need to parse message and filter out keywords
   if (messageText) {
 
-    // Need vocabulary and parser
-    // If we receive a text message, check to see if it matches a keyword
     switch (messageText.toLowerCase()) {
+      case 'help':
+          sendTextMessage(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you");
+      break;      
       case 'generic':
         sendGenericMessage(senderID);
         break;
       case 'hello':
-      	greeter(senderID);
+        quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
       	break;
-      case 'hot':
+      case 'try products':
+        singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
+        quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
+        break;
+      case 'Here':
+        quickReply(senderID, "Okay. What will you have?", "Black Tea", "Caramel Frapp", "Black brewed","Berry Tea");
+        break;
+      case 'I\'ll go there':
+        sendTextMessage(senderID, "Okay. Were at the ground floor lobby. Bye!");
+        break;
+      case 'bot':
       	sendTextMessage(senderID, "Yup, I'm a bot");
       	break;
       case 'how are you?':
@@ -104,8 +114,8 @@ function receivedMessage(event) {
       case 'yes':
       	sendTextMessage(senderID, "Good");
       	break;
-      case 'ask color':
-        quickReply(senderID);
+      case 'menu':
+        quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
         break;        
       case 'push to master':
       	sendTextMessage(senderID, "Authenticated to master");
@@ -114,10 +124,10 @@ function receivedMessage(event) {
         sendTextMessage(senderID, "Authenticated to test-deploy");
         break;
       case 'doom':
-        sendImage(senderID);
+        sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
         break;
       default:
-        sendTextMessage(senderID, messageText);
+        sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -125,18 +135,15 @@ function receivedMessage(event) {
     sendTextMessage(senderID, "I don't know that. I'm just a bot");
   } 
 }
-// Incomplete greeter: Does not personalize message
-function greeter(recipientId) {
- var messageData = {
-  setting_type:"greeting",
-  greeting:{
-    text:"Hi {{user_first_name}}, welcome to this bot."
-  }
-};
-  callSendAPI(messageData);
-}
 
-function sendImage(recipientId) {
+
+let fun = ()=> {
+          let tokenizer = messageText.split(/\s/gi);
+          let out = tokenizer.join("");
+          return out;
+};
+
+function sendImage(recipientId, url) {
   var messageData = {
   recipient:{
     id: recipientId
@@ -145,7 +152,8 @@ function sendImage(recipientId) {
     attachment:{
       type:"image",
       payload:{
-        url:"https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg"
+        url: url,
+        is_reusable: true
       }
     }
   }
@@ -155,12 +163,178 @@ callSendAPI(messageData);
 
 }
 
-
 /*
-* Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
+* Adds quick reply functionality:
+* Can give up to 5 options
 */
+  function quickReply(recipientId, ask, option1, option2, option3, option4, option5) {
+    var messageData = null;
 
-function sendGenericMessage(recipientId, messageText) {
+    if ((option3 && option4)&&option5) {
+
+        messageData = {
+        recipient:{
+          id: recipientId
+        },
+        message:{
+          text:ask,
+          quick_replies:[
+            {
+              content_type:"text",
+              title: option1,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title:option2,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+            },
+            {
+              content_type:"text",
+              title: option3,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title: option4,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title: option5,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },                              
+          ]
+        }
+      };
+      callSendAPI(messageData);           
+
+    } else if (option3 && option4) {
+
+        messageData = {
+        recipient:{
+          id: recipientId
+        },
+        message:{
+          text:ask,
+          quick_replies:[
+            {
+              content_type:"text",
+              title: option1,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title:option2,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+            },
+            {
+              content_type:"text",
+              title: option3,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title: option4,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            }                   
+          ]
+        }
+      };
+      callSendAPI(messageData);   
+
+    } else if(option3) {
+
+        messageData = {
+        recipient:{
+          id: recipientId
+        },
+        message:{
+          text:ask,
+          quick_replies:[
+            {
+              content_type:"text",
+              title: option1,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title:option2,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+            },
+            {
+              content_type:"text",
+              title: option3,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            }                             
+          ]
+        }
+      };
+      callSendAPI(messageData);        
+
+    } else {
+
+        messageData = {
+        recipient:{
+          id: recipientId
+        },
+        message:{
+          text:ask,
+          quick_replies:[
+            {
+              content_type:"text",
+              title: option1,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            },
+            {
+              content_type:"text",
+              title:option2,
+              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
+            }
+          ]
+        }
+      };
+      callSendAPI(messageData);
+
+    }
+
+  }
+
+
+function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: title,
+            subtitle: subTitle,
+            item_url: url,               
+            image_url: imgUrl,
+            buttons: [{
+              type: "web_url",
+              url: url,
+              title: button1
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for first bubble",
+            }]
+          }]
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+}
+
+function sendGenericMessage(recipientId) {
   var messageData = {
     recipient: {
       id: recipientId
@@ -207,35 +381,6 @@ function sendGenericMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-// use quick reply 
-function quickReply(recipientId) {
-  var messageData = {
-  recipient:{
-    id: recipientId
-  },
-  message:{
-    text:"Pick a color:",
-    quick_replies:[
-      {
-        content_type:"text",
-        title:"Red",
-        payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-      },
-      {
-        content_type:"text",
-        title:"Green",
-        payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-      }
-    ]
-  }
-};
-  callSendAPI(messageData);
-}
-
-
-/*
-* Uses the send message api template. See https://developers.facebook.com/docs/messenger-platform/send-api-reference
-*/
 
 function sendTextMessage(recipientId, messageText) {
   var messageData = {
