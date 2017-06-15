@@ -83,7 +83,7 @@ function receivedMessage(event) {
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
-  // Currently running on rss-reader-deploy
+  // Currently running on rss-reader
 
   if (messageText) {
 
