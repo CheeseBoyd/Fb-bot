@@ -51,6 +51,7 @@ app.post('/webhook', function (req, res) {
       // if event is a message  
         if (event.message) {
           receivedMessage(event);
+      // if event is a postback    
         } else if (event.postback) {
           receivedPostback(event);
         } else {
