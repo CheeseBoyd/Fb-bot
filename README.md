@@ -1,2 +1,2 @@
 # Fb-bot
-Repo linked to heroku and FB-page
+Running on Heroku and hooked on FaceBook. 
