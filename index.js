@@ -20,6 +20,7 @@ app.use(bodyParser.json())
 
 app.get('/', function (req, res) {
 	res.send("Hello World")
+  res.send("Hola")
 })
 
 // Have facebook verify the webhook token
