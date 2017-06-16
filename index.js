@@ -20,6 +20,7 @@ app.use(bodyParser.json())
 
 app.get('/', function (req, res) {
 	res.send("Hello World")
+  res.send("Hola")
 })
 
 // Have facebook verify the webhook token
@@ -83,11 +84,13 @@ function receivedMessage(event) {
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
+  // Currently running on rss-reader
+
   if (messageText) {
 
     switch (messageText.toLowerCase()) {
       case 'help':
-          sendTextMessage(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you");
+          quickReply(senderID, "Hi. I'm a bot that can get you coffee or news. What will you have?", "try products", "get news");
       break;      
       case 'generic':
         sendGenericMessage(senderID);
@@ -95,6 +98,9 @@ function receivedMessage(event) {
       case 'hello':
         quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
       	break;
+      case 'get news':
+        singleCard(senderID, "Headlines", "More on MB.com.ph", "http://mb.com.ph/", "http://www.komikon.org/wp-content/uploads/2013/08/mb-logo-guide-1-1024x394.jpg")
+        break;
       case 'try products':
         singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
         quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
