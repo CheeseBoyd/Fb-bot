@@ -1,7 +1,7 @@
 # Facebook Messenger Chatbot
 ### Chatbot that understand basic greetings and pleasantries
 
-Inspired by the [CNN chatbot] (https://www.facebook.com/cnn/)
+Inspired by the [CNN chatbot](https://www.facebook.com/cnn/)
 
 ### Responds only to: 
 
