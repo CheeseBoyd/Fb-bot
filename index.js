@@ -132,6 +132,9 @@ function receivedMessage(event) {
       case 'doom':
         sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
         break;
+      case 'rss':
+      	testAPI(senderID);
+      	break;
       default:
         sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
     }
@@ -340,18 +343,34 @@ function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
   callSendAPI(messageData);
 }
 
-function testAPI(){
+
+/* ##############################################################################
+*  TESTING FEED PARSER API 
+*/
+function testAPI(senderID){
+	
 var parser = require('rss-parser');
 
 parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
   console.log(parsed.feed.title);
   parsed.feed.entries.forEach(function(entry) {
+
+
+// inject output to messenger card
+singleCard(senderID, "Visit us", "output from reddit", entry.link, "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
+
+
+
     console.log(entry.title + ':' + entry.link);
   })
 });	
+
+
+
 }
 
-testAPI();
+
+
 
 function sendGenericMessage(recipientId) {
   var messageData = {
