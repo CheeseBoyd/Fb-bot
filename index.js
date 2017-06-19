@@ -340,6 +340,19 @@ function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
   callSendAPI(messageData);
 }
 
+function testAPI(){
+var parser = require('rss-parser');
+
+parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
+  console.log(parsed.feed.title);
+  parsed.feed.entries.forEach(function(entry) {
+    console.log(entry.title + ':' + entry.link);
+  })
+});	
+}
+
+testAPI();
+
 function sendGenericMessage(recipientId) {
   var messageData = {
     recipient: {
