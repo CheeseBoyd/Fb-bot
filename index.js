@@ -357,7 +357,7 @@ parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
 
 
 // inject output to messenger card
-singleCard(senderID, "Visit us", "output from reddit", entry.link, "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
+singleCard(senderID, entry.title, entry.summary, entry.link, entry.image, "see more");
 
 
 
