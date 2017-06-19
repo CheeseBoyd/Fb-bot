@@ -355,7 +355,7 @@ parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
   console.log(parsed.feed.title);
   parsed.feed.entries.forEach(function(entry) {
 
-
+ console.log(Object.getOwnPropertyNames(entry));
 // inject output to messenger card
 singleCard(senderID, entry.title, entry.summary, entry.link, entry.image, "see more");
 
