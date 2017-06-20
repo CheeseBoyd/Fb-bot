@@ -358,46 +358,46 @@ var messageData = {
             template_type: "list",
             elements: [
                 {
-                    title: "Classic T-Shirt Collection",
-                    image_url: "https://peterssendreceiveapp.ngrok.io/img/collection.png",
-                    subtitle: "See all our colors",
+                    title: "Reddit",
+                    image_url: "https://assets.ifttt.com/images/channels/1352860597/icons/on_color_large.png",
+                    subtitle: "Stuff around the web",
                     default_action: {
                         type: "web_url",
-                        url: "https://peterssendreceiveapp.ngrok.io/shop_collection",
+                        url: "https://www.reddit.com/",
                         messenger_extensions: true,
                         webview_height_ratio: "tall",
-                        fallback_url: "https://peterssendreceiveapp.ngrok.io/"
+                        fallback_url: "https://www.reddit.com/"
                     },
                     buttons: [
                         {
-                            title: "View",
+                            title: "See",
                             type: "web_url",
-                            url: "https://peterssendreceiveapp.ngrok.io/collection",
+                            url: "https://www.reddit.com/",
                             messenger_extensions: true,
                             webview_height_ratio: "tall",
-                            fallback_url: "https://peterssendreceiveapp.ngrok.io/"                        
+                            fallback_url: "https://www.reddit.com/"                        
                         }
                     ]
                 },
                 {
-                    title: "Classic Black T-Shirt",
-                    image_url: "https://peterssendreceiveapp.ngrok.io/img/black-t-shirt.png",
-                    subtitle: "100% Cotton, 200% Comfortable",
+                    title: "9gag",
+                    image_url: "http://icons.iconarchive.com/icons/martz90/circle/512/9gag-icon.png",
+                    subtitle: "Have fun",
                     default_action: {
                         type: "web_url",
-                        url: "https://peterssendreceiveapp.ngrok.io/view?item=102",
+                        url: "https://www.9gag.com/",
                         messenger_extensions: true,
                         webview_height_ratio: "tall",
-                        fallback_url: "https://peterssendreceiveapp.ngrok.io/"
+                        fallback_url: "https://www.9gag.com/"
                     },
                     buttons: [
                         {
                             title: "Shop Now",
                             type: "web_url",
-                            url: "https://peterssendreceiveapp.ngrok.io/shop?item=102",
+                            url: "https://www.9gag.com/",
                             messenger_extensions: true,
                             webview_height_ratio: "tall",
-                            fallback_url: "https://peterssendreceiveapp.ngrok.io/"                        
+                            fallback_url: "https://www.9gag.com/"                        
                         }
                     ]                
                 }
