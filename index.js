@@ -402,7 +402,7 @@ function displayList(recipientId) {
 		                        }
 		                    ]
 		                },		                
-		        	]
+		        	],
 
 		            buttons: [
 		                {
