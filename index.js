@@ -416,6 +416,9 @@ function displayList(recipientId) {
 		}
 		    
 		}
+
+callSendAPI(messageData);
+
 }
 
 /* ##############################################################################
