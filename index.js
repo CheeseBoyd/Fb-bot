@@ -350,7 +350,7 @@ function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
 function displayList(recipientId) {
 var messageData = {
   recipient:{
-    id:"RECIPIENT_ID"
+    id:recipientId
   }, message: {
     attachment: {
         type: "template",
