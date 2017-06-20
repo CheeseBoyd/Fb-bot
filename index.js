@@ -135,6 +135,9 @@ function receivedMessage(event) {
       case 'rss':
       	testAPI(senderID);
       	break;
+      case 'list':
+      	displayList(senderID);
+      	break;
       default:
         sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
     }
@@ -344,6 +347,77 @@ function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
 }
 
 
+function displayList(recipientId) {
+	var messageData = {
+		  recipient:{
+		    id: recipientId
+		  }, message: {
+		    attachment: {
+		        type: "template",
+		        payload: {
+		            template_type: "list",
+		            elements: [
+		                {
+		                    title: "Reddit",
+		                    image_url: "https://assets.ifttt.com/images/channels/1352860597/icons/on_color_large.png",
+		                    subtitle: "Stuff around the web",
+		                    default_action: {
+		                        type: "web_url",
+		                        url: "https://www.reddit.com/",
+		                        messenger_extensions: true,
+		                        webview_height_ratio: "tall",
+		                        fallback_url: "https://www.reddit.com/"
+		                    },
+		                    buttons: [
+		                        {
+		                            title: "Find out more",
+		                            type: "web_url",
+		                            url: "https://www.reddit.com/",
+		                            messenger_extensions: true,
+		                            webview_height_ratio: "tall",
+		                            fallback_url: "https://www.reddit.com/"                        
+		                        }
+		                    ]
+		                },
+
+		                {
+		                    title: "9Gag",
+		                    image_url: "http://icons.iconarchive.com/icons/martz90/circle/512/9gag-icon.png",
+		                    subtitle: "Have some fun",
+		                    default_action: {
+		                        type: "web_url",
+		                        url: "https://www.9gag.com/",
+		                        messenger_extensions: true,
+		                        webview_height_ratio: "tall",
+		                        fallback_url: "https://www.9gag.com/"
+		                    },
+		                    buttons: [
+		                        {
+		                            title: "Hey man",
+		                            type: "web_url",
+		                            url: "https://www.9gag.com/",
+		                            messenger_extensions: true,
+		                            webview_height_ratio: "tall",
+		                            fallback_url: "https://www.9gag.com/"                        
+		                        }
+		                    ]
+		                },		                
+		        	]
+
+		            buttons: [
+		                {
+		                    title: "View More",
+		                    type: "postback",
+		                    payload: "payload"                        
+		                }
+		            ]		        	  
+		        }
+		    }
+		}
+		    
+		}
+}
+
 /* ##############################################################################
 *  TESTING FEED PARSER API 
 */
@@ -357,9 +431,7 @@ parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
 
  console.log(Object.getOwnPropertyNames(entry));
 // inject output to messenger card
-singleCard(senderID, entry.title, entry.summary, entry.link, entry.image, "see more");
-
-
+singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "see more");
 
     console.log(entry.title + ':' + entry.link);
   })
