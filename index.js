@@ -8,6 +8,12 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
+const sp = require('./speech.js')
+
+let speech = sp.getSpeech()
+let filterBySpeech = sp.filterBySpeech()
+
+console.log(filterBySpeech());
 /*
 const vocabulary = require('./vocabulary.js')
 const reply = require('./reply.js')
@@ -148,12 +154,6 @@ function receivedMessage(event) {
   } 
 }
 
-
-let fun = ()=> {
-          let tokenizer = messageText.split(/\s/gi);
-          let out = tokenizer.join("");
-          return out;
-};
 
 function sendImage(recipientId, url) {
   var messageData = {
