@@ -39,11 +39,8 @@ app.post('/webhook', function (req, res) {
       var timeOfEvent = entry.time;
       entry.messaging.forEach(function(event) {
         if (event.message) {
-<<<<<<< HEAD
           receivedMessage(event);
-=======
           receivedMessage(event);  
->>>>>>> rss-reader
         } else if (event.postback) {
           receivedPostback(event);
         } else {
