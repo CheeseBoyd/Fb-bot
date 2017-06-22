@@ -11,9 +11,9 @@ const access = process.env.FB_ACCESS_TOKEN
 const sp = require('./speech.js')
 
 let speech = sp.getSpeech()
-let filterBySpeech = sp.filterBySpeech()
+let filterBySpeech = sp.filterBySpeech(sp)
 
-console.log(filterBySpeech());
+console.log(filterBySpeech);
 /*
 const vocabulary = require('./vocabulary.js')
 const reply = require('./reply.js')
