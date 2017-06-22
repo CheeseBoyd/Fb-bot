@@ -27,7 +27,7 @@ function getSpeech() {
 
 var keys = Object.keys(speech);
 
-function filterBySpeech(){
+function filterBySpeech(speech){
 	let arr = [];
 	keys.forEach(function(keys){
 		console.log("List of known words in " + keys)
@@ -49,8 +49,7 @@ let log = {
 		return sp		
 	},
 
-	filterBySpeech: function() {
-		var speech = getSpeech();
+	filterBySpeech: function(speech) {
 		var key = Object.keys(speech);
 
 		let arr = [];
