@@ -2,27 +2,24 @@
 * Load dependencies and secure access tokens
 */
 
+'use strict'
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
-/*
-const vocabulary = require('./vocabulary.js')
-const reply = require('./reply.js')
-*/
+
+
 
 app.set('port',(process.env.PORT || 5000))
-
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
-
 app.get('/', function (req, res) {
 	res.send("Hello World")
+  res.send("Hola")
 })
-
-// Have facebook verify the webhook token
 
 app.get('/webhook/', function(req, res) {
 	if(req.query['hub.verify_token'] === token) {
@@ -33,24 +30,20 @@ app.get('/webhook/', function(req, res) {
 })
 
 
-// Have facebook post on webhook
-
 app.post('/webhook', function (req, res) {
   var data = req.body;
 
-  // Make sure this is a page subscription
   if (data.object === 'page') {
-
-    // Iterate over each entry - there may be multiple if batched
     data.entry.forEach(function(entry) {
       var pageID = entry.id;
       var timeOfEvent = entry.time;
-
-      // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
-      // if event is a message  
         if (event.message) {
+<<<<<<< HEAD
           receivedMessage(event);
+=======
+          receivedMessage(event);  
+>>>>>>> rss-reader
         } else if (event.postback) {
           receivedPostback(event);
         } else {
@@ -59,11 +52,13 @@ app.post('/webhook', function (req, res) {
       });
     });
 
-    // Assume all went well.
-    //
-    // You must send back a 200, within 20 seconds, to let us know
-    // you've successfully received the callback. Otherwise, the request
-    // will time out and we will keep trying to resend.
+    /*
+     Assume all went well.
+
+     You must send back a 200, within 20 seconds, to let us know
+     you've successfully received the callback. Otherwise, the request
+     will time out and we will keep trying to resend.
+    */    
     res.sendStatus(200);
   }
 });
@@ -75,9 +70,8 @@ function receivedMessage(event) {
   var timeOfMessage = event.timestamp;
   var message = event.message;
   console.log("Received message for user %d and page %d at %d with message:", 
-    senderID, recipientID, timeOfMessage);
+  senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
-
   var messageId = message.mid;
   var messageText = message.text;
   var messageAttachments = message.attachments;
@@ -86,7 +80,7 @@ function receivedMessage(event) {
 
     switch (messageText.toLowerCase()) {
       case 'help':
-          sendTextMessage(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you");
+          quickReply(senderID, "Hi. I'm a bot that can get you coffee or news. What will you have?", "try products", "get news");
       break;      
       case 'generic':
         sendGenericMessage(senderID);
@@ -94,6 +88,9 @@ function receivedMessage(event) {
       case 'hello':
         quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
       	break;
+      case 'get news':
+        singleCard(senderID, "Headlines", "More on MB.com.ph", "http://mb.com.ph/", "http://www.komikon.org/wp-content/uploads/2013/08/mb-logo-guide-1-1024x394.jpg")
+        break;
       case 'try products':
         singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
         quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
@@ -125,8 +122,14 @@ function receivedMessage(event) {
       case 'doom':
         sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
         break;
+      case 'rss':
+      	testAPI(senderID);
+      	break;
+      case 'list':
+      	displayList(senderID);
+      	break;
       default:
-        sendTextMessage(senderID, "I'm sorry I don't know what you meant in: " + messageText);
+        sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -146,6 +149,7 @@ function sendImage(recipientId, url) {
       type:"image",
       payload:{
         url: url,
+        is_reusable: true
       }
     }
   }
@@ -325,6 +329,101 @@ function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
 
   callSendAPI(messageData);
 }
+
+
+function displayList(recipientId) {
+var messageData = {
+  recipient:{
+    id:recipientId
+  }, message: {
+    attachment: {
+        type: "template",
+        payload: {
+            template_type: "list",
+            elements: [
+                {
+                    title: "Reddit",
+                    image_url: "https://assets.ifttt.com/images/channels/1352860597/icons/on_color_large.png",
+                    subtitle: "Stuff around the web",
+                    default_action: {
+                        type: "web_url",
+                        url: "https://www.reddit.com/",
+                        messenger_extensions: true,
+                        webview_height_ratio: "tall",
+                        fallback_url: "https://www.reddit.com/"
+                    },
+                    buttons: [
+                        {
+                            title: "See",
+                            type: "web_url",
+                            url: "https://www.reddit.com/",
+                            messenger_extensions: true,
+                            webview_height_ratio: "tall",
+                            fallback_url: "https://www.reddit.com/"                        
+                        }
+                    ]
+                },
+                {
+                    title: "9gag",
+                    image_url: "http://icons.iconarchive.com/icons/martz90/circle/512/9gag-icon.png",
+                    subtitle: "Have fun",
+                    default_action: {
+                        type: "web_url",
+                        url: "https://www.9gag.com/",
+                        messenger_extensions: true,
+                        webview_height_ratio: "tall",
+                        fallback_url: "https://www.9gag.com/"
+                    },
+                    buttons: [
+                        {
+                            title: "Shop Now",
+                            type: "web_url",
+                            url: "https://www.9gag.com/",
+                            messenger_extensions: true,
+                            webview_height_ratio: "tall",
+                            fallback_url: "https://www.9gag.com/"                        
+                        }
+                    ]                
+                }
+            ],
+             buttons: [
+                {
+                    title: "View More",
+                    type: "postback",
+                    payload: "payload"                        
+                }
+            ]  
+        }
+    }
+}
+    
+}
+
+callSendAPI(messageData);
+}
+
+/* ##############################################################################
+*  TESTING FEED PARSER API 
+*/
+function testAPI(senderID){
+	
+var parser = require('rss-parser');
+
+parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
+  console.log(parsed.feed.title);
+  parsed.feed.entries.forEach(function(entry) {
+
+ console.log(Object.getOwnPropertyNames(entry));
+// inject output to messenger card
+singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "see more");
+
+    console.log(entry.title + ':' + entry.link);
+  })
+});	
+
+
+}
+
 
 function sendGenericMessage(recipientId) {
   var messageData = {
