@@ -50,14 +50,14 @@ let log = {
 
 	filterBySpeech: function() {
 		var speech = getSpeech();
-		var keys = Object.keys(speech);
+		var key = Object.keys(speech);
 
 		let arr = [];
-		keys.forEach(function(keys){
-			console.log("List of known words in " + keys)
-			for(var i = 0;i < speech[keys].length; i++) {
-		    console.log("----->"+ speech[keys][i]);
-		    arr.append(speech[keys][i]);
+		key.forEach(function(keys){
+			console.log("List of known words in " + key)
+			for(var i = 0;i < speech[key].length; i++) {
+		    console.log("----->"+ speech[key][i]);
+		    arr.append(speech[key][i]);
 		  }
 		});
 		return arr;
