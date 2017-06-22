@@ -20,6 +20,7 @@ let speech = {
 
 function getSpeech() {
 	let sp = this.speech;
+	console.log(sp);	
 	return sp;
 }
 
