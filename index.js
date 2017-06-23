@@ -39,11 +39,8 @@ app.post('/webhook', function (req, res) {
       var timeOfEvent = entry.time;
       entry.messaging.forEach(function(event) {
         if (event.message) {
-<<<<<<< HEAD
           receivedMessage(event);
-=======
           receivedMessage(event);  
->>>>>>> rss-reader
         } else if (event.postback) {
           receivedPostback(event);
         } else {
@@ -131,11 +128,8 @@ function receivedMessage(event) {
       default:
         sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
     }
-  } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
   } else {
-    sendTextMessage(senderID, "I don't know that. I'm just a bot");
-  } 
+    sendTextMessage(senderID, "Message with attachment received");
 }
 
 
