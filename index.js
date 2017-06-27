@@ -2,6 +2,7 @@
 * Load dependencies and secure access tokens
 */
 
+'use strict'
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -10,23 +11,22 @@ const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
 
-// Load speech.js
-const speech = require('./speech.js')
 
 
 app.set('port',(process.env.PORT || 5000))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 app.get('/', function (req, res) {
-	res.send("Hello World")
+  res.send("Hello World")
+  res.send("Hola")
 })
 
 app.get('/webhook/', function(req, res) {
-	if(req.query['hub.verify_token'] === token) {
-		res.send(req.query['hub.challenge'])
-	}
+  if(req.query['hub.verify_token'] === token) {
+    res.send(req.query['hub.challenge'])
+  }
 
-	res.send('No entry')
+  res.send('No entry')
 })
 
 
@@ -51,7 +51,6 @@ app.post('/webhook', function (req, res) {
 
     /*
      Assume all went well.
-
      You must send back a 200, within 20 seconds, to let us know
      you've successfully received the callback. Otherwise, the request
      will time out and we will keep trying to resend.
@@ -59,14 +58,6 @@ app.post('/webhook', function (req, res) {
     res.sendStatus(200);
   }
 });
-
-function escapeRegExp(str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-}
-
-
-
- 
 
 
 function receivedMessage(event) {
@@ -80,66 +71,67 @@ function receivedMessage(event) {
   var messageId = message.mid;
   var messageText = message.text;
   var messageAttachments = message.attachments;
-  var text = messageText.toLowerCase()
 
   if (messageText) {
 
-  switch (messageText.toLowerCase()) {
-    case 'help':
-        quickReply(senderID, "Hi. I'm a bot that can get you coffee or news. What will you have?", "try products", "get news");
-    break;      
-    case 'generic':
-      sendGenericMessage(senderID);
-      break;
-    case 'hello':
-      quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
-    	break;
-    case 'get news':
-      singleCard(senderID, "Headlines", "More on MB.com.ph", "http://mb.com.ph/", "http://www.komikon.org/wp-content/uploads/2013/08/mb-logo-guide-1-1024x394.jpg")
-      break;
-    case 'try products':
-      singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
-      quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
-      break;
-    case 'Here':
-      quickReply(senderID, "Okay. What will you have?", "Black Tea", "Caramel Frapp", "Black brewed","Berry Tea");
-      break;
-    case 'I\'ll go there':
-      sendTextMessage(senderID, "Okay. Were at the ground floor lobby. Bye!");
-      break;
-    case 'bot':
-    	sendTextMessage(senderID, "Yup, I'm a bot");
-    	break;
-    case 'how are you?':
-    	sendTextMessage(senderID, "I'm a bot, are you Human?");
-    	break;
-    case 'yes':
-    	sendTextMessage(senderID, "Good");
-    	break;
-    case 'menu':
-      quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
-      break;        
-    case 'push to master':
-    	sendTextMessage(senderID, "Authenticated to master");
-    	break;
-    case 'push to test-deploy':
-      sendTextMessage(senderID, "Authenticated to test-deploy");
-      break;
-    case 'doom':
-      sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
-      break;
-    case 'rss':
-    	testAPI(senderID);
-    	break;
-    case 'list':
-    	displayList(senderID);
-    	break;
-    default:
-      sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
-  }
-
-  } else {
+    switch (messageText.toLowerCase()) {
+      case 'help':
+          quickReply(senderID, "Hi. I'm a bot that can get you coffee or news. What will you have?", "try products", "get news");
+      break;      
+      case 'generic':
+        sendGenericMessage(senderID);
+        break;
+      case 'hello':
+        quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
+        break;
+      case 'get news':
+        singleCard(senderID, "Headlines", "More on MB.com.ph", "http://mb.com.ph/", "http://www.komikon.org/wp-content/uploads/2013/08/mb-logo-guide-1-1024x394.jpg")
+        break;
+      case 'try products':
+        singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
+        quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
+        break;
+      case 'Here':
+        quickReply(senderID, "Okay. What will you have?", "Black Tea", "Caramel Frapp", "Black brewed","Berry Tea");
+        break;
+      case 'I\'ll go there':
+        sendTextMessage(senderID, "Okay. Were at the ground floor lobby. Bye!");
+        break;
+      case 'bot':
+        sendTextMessage(senderID, "Yup, I'm a bot");
+        break;
+      case 'how are you?':
+        sendTextMessage(senderID, "I'm a bot, are you Human?");
+        break;
+      case 'yes':
+        sendTextMessage(senderID, "Good");
+        break;
+      case 'menu':
+        quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
+        break;        
+      case 'push to master':
+        sendTextMessage(senderID, "Authenticated to master");
+        break;
+      case 'push to test-deploy':
+        sendTextMessage(senderID, "Authenticated to test-deploy");
+        break;
+      case 'doom':
+        sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
+        break;
+      case 'rss':
+        testAPI(senderID);
+        break;
+      case 'list':
+        displayList(senderID);
+        break;
+      default:
+        sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
+    }
+  } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
+  } else {
+    sendTextMessage(senderID, "I don't know that. I'm just a bot");
+  } 
 }
 
 
@@ -410,7 +402,7 @@ callSendAPI(messageData);
 *  TESTING FEED PARSER API 
 */
 function testAPI(senderID){
-	
+  
 var parser = require('rss-parser');
 
 parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
@@ -423,7 +415,7 @@ singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "s
 
     console.log(entry.title + ':' + entry.link);
   })
-});	
+}); 
 
 
 }
@@ -532,5 +524,5 @@ function receivedPostback(event) {
 
 
 app.listen(app.get('port'), function() {
-	console.log('Running on port', app.get('port'))
+  console.log('Running on port', app.get('port'))
 }) 
