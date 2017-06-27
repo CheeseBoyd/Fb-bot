@@ -88,10 +88,10 @@ function receivedMessage(event) {
   var text = messageText.toLowerCase()
 
   if (messageText) {
-
+/*
     let keys = null
-    keys = Object.keys(speechObj);
-    console.log("keys: " + keys);
+    keys = Object.keys(speechObj)
+    console.log("keys: " + keys)
     keys.forEach(function(key) {
       console.log("Key group array of: " + key);
       for(let value of speechObj[key]) {
@@ -103,25 +103,25 @@ function receivedMessage(event) {
           console.log(regex + " found in array: ---> " + key );
           switch(key) {
             case 'GREET':
-              quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
+              quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news")
               break;
             case 'GOODBYE':
-              sendTextMessage(senderID, "Bye bye");
+              sendTextMessage(senderID, "Bye bye")
               break;
             default: 
-              console.log("NO AVAILABLE response");
+              console.log("NO AVAILABLE response")
           }
 
           
         } else {
-          sendTextMessage(senderID, "Bye bye");
+          sendTextMessage(senderID, "Bye bye")
         } 
 
       }
     })
+*/
 
 
-/*
 switch (messageText.toLowerCase()) {
   case 'help':
       quickReply(senderID, "Hi. I'm a bot that can get you coffee or news. What will you have?", "try products", "get news");
@@ -175,7 +175,7 @@ switch (messageText.toLowerCase()) {
   default:
     sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
 }
-*/
+
 
   } else {
     sendTextMessage(senderID, "Message with attachment received");
