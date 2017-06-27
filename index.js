@@ -13,9 +13,6 @@ const access = process.env.FB_ACCESS_TOKEN
 
 // Load speech.js
 const speech = require('./speech.js')
-console.log(speech.get())
-console.log(speech.statement)
-speech.foo()
 
 
 app.set('port',(process.env.PORT || 5000))
@@ -72,7 +69,7 @@ function escapeRegExp(str) {
 
 
  
-const speechObj = speech.get();
+
 
 function receivedMessage(event) {
   var senderID = event.sender.id;
@@ -88,94 +85,60 @@ function receivedMessage(event) {
   var text = messageText.toLowerCase()
 
   if (messageText) {
-/*
-    let keys = null
-    keys = Object.keys(speechObj)
-    console.log("keys: " + keys)
-    keys.forEach(function(key) {
-      console.log("Key group array of: " + key);
-      for(let value of speechObj[key]) {
-        console.log("---->"+ value)
 
-        let regex = new RegExp(value)
-
-        if(regex.test(text)) {
-          console.log(regex + " found in array: ---> " + key );
-          switch(key) {
-            case 'GREET':
-              quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news")
-              break;
-            case 'GOODBYE':
-              sendTextMessage(senderID, "Bye bye")
-              break;
-            default: 
-              console.log("NO AVAILABLE response")
-          }
-
-          
-        } else {
-          sendTextMessage(senderID, "Bye bye")
-        } 
-
-      }
-    })
-*/
-
-
-switch (messageText.toLowerCase()) {
-  case 'help':
-      quickReply(senderID, "Hi. I'm a bot that can get you coffee or news. What will you have?", "try products", "get news");
-  break;      
-  case 'generic':
-    sendGenericMessage(senderID);
-    break;
-  case 'hello':
-    quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
-  	break;
-  case 'get news':
-    singleCard(senderID, "Headlines", "More on MB.com.ph", "http://mb.com.ph/", "http://www.komikon.org/wp-content/uploads/2013/08/mb-logo-guide-1-1024x394.jpg")
-    break;
-  case 'try products':
-    singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
-    quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
-    break;
-  case 'Here':
-    quickReply(senderID, "Okay. What will you have?", "Black Tea", "Caramel Frapp", "Black brewed","Berry Tea");
-    break;
-  case 'I\'ll go there':
-    sendTextMessage(senderID, "Okay. Were at the ground floor lobby. Bye!");
-    break;
-  case 'bot':
-  	sendTextMessage(senderID, "Yup, I'm a bot");
-  	break;
-  case 'how are you?':
-  	sendTextMessage(senderID, "I'm a bot, are you Human?");
-  	break;
-  case 'yes':
-  	sendTextMessage(senderID, "Good");
-  	break;
-  case 'menu':
-    quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
-    break;        
-  case 'push to master':
-  	sendTextMessage(senderID, "Authenticated to master");
-  	break;
-  case 'push to test-deploy':
-    sendTextMessage(senderID, "Authenticated to test-deploy");
-    break;
-  case 'doom':
-    sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
-    break;
-  case 'rss':
-  	testAPI(senderID);
-  	break;
-  case 'list':
-  	displayList(senderID);
-  	break;
-  default:
-    sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
-}
-
+  switch (messageText.toLowerCase()) {
+    case 'help':
+        quickReply(senderID, "Hi. I'm a bot that can get you coffee or news. What will you have?", "try products", "get news");
+    break;      
+    case 'generic':
+      sendGenericMessage(senderID);
+      break;
+    case 'hello':
+      quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
+    	break;
+    case 'get news':
+      singleCard(senderID, "Headlines", "More on MB.com.ph", "http://mb.com.ph/", "http://www.komikon.org/wp-content/uploads/2013/08/mb-logo-guide-1-1024x394.jpg")
+      break;
+    case 'try products':
+      singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
+      quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
+      break;
+    case 'Here':
+      quickReply(senderID, "Okay. What will you have?", "Black Tea", "Caramel Frapp", "Black brewed","Berry Tea");
+      break;
+    case 'I\'ll go there':
+      sendTextMessage(senderID, "Okay. Were at the ground floor lobby. Bye!");
+      break;
+    case 'bot':
+    	sendTextMessage(senderID, "Yup, I'm a bot");
+    	break;
+    case 'how are you?':
+    	sendTextMessage(senderID, "I'm a bot, are you Human?");
+    	break;
+    case 'yes':
+    	sendTextMessage(senderID, "Good");
+    	break;
+    case 'menu':
+      quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
+      break;        
+    case 'push to master':
+    	sendTextMessage(senderID, "Authenticated to master");
+    	break;
+    case 'push to test-deploy':
+      sendTextMessage(senderID, "Authenticated to test-deploy");
+      break;
+    case 'doom':
+      sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
+      break;
+    case 'rss':
+    	testAPI(senderID);
+    	break;
+    case 'list':
+    	displayList(senderID);
+    	break;
+    default:
+      sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
+  }
 
   } else {
     sendTextMessage(senderID, "Message with attachment received");
