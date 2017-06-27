@@ -10,6 +10,10 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
+const speech = require('./speech.js');
+console.log(speech.get());
+console.log(speech.statement);
+speech.foo()
 
 
 
