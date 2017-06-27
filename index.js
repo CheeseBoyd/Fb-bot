@@ -10,10 +10,7 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
-const speech = require('./speech.js');
-console.log(speech.get());
-console.log(speech.statement);
-speech.foo()
+const speech = require('./speech.js')
 
 
 
@@ -63,6 +60,10 @@ app.post('/webhook', function (req, res) {
 
 
 function receivedMessage(event) {
+console.log(speech.get());
+console.log(speech.statement);
+speech.foo()
+  
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
