@@ -1,6 +1,9 @@
 /*
 * Load dependencies and secure access tokens
 */
+
+'use strict'
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
@@ -35,7 +38,6 @@ app.post('/webhook', function (req, res) {
       var timeOfEvent = entry.time;
       entry.messaging.forEach(function(event) {
         if (event.message) {
-          receivedMessage(event);
           receivedMessage(event);  
         } else if (event.postback) {
           receivedPostback(event);
