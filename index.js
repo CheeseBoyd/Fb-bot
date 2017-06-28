@@ -81,13 +81,13 @@ function receivedMessage(event) {
       if(regex.test(messageText.toLowerCase())) {
         switch(key) {
           case 'GREET':
-           sendTextMessage(recipientID, "HEY IT WORKS")
+           sendTextMessage(senderID, "HEY IT WORKS")
             break;
           case 'GOODBYE':
-            sendTextMessage(recipientID, "GOODBYE IT WORKS")
+            sendTextMessage(senderID, "GOODBYE IT WORKS")
             break;
           default: 
-            sendTextMessage(recipientID, "¯\\_(ツ)_/¯  ?? ---> " + messageText)
+            sendTextMessage(senderID, "¯\\_(ツ)_/¯  ?? ---> " + messageText)
         }
 
         return true
