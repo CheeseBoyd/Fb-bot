@@ -87,7 +87,9 @@ function receivedMessage(event) {
             sendTextMessage(senderID, "GOODBYE IT WORKS")
             break;
           default: 
-            sendTextMessage(senderID, "¯\\_(ツ)_/¯  ?? ---> " + messageText)
+            console.log("No match found for --> " + messageText)
+        } else {
+          sendTextMessage(senderID, "¯\\_(ツ)_/¯  ?? ---> " + messageText)
         }
 
         return true
