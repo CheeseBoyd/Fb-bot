@@ -90,11 +90,7 @@ function receivedMessage(event) {
             console.log("No match found for --> " + messageText)
         }
 
-
-      } else {
-          sendTextMessage(senderID, "¯\\_(ツ)_/¯  ?? ---> " + messageText)
-          break;
-        }
+      } else { break; }
 
     }
     });  
