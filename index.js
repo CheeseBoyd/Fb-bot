@@ -88,10 +88,12 @@ function receivedMessage(event) {
             break;
           default: 
             console.log("No match found for --> " + messageText)
-        } 
-        
+        }
+
+
       } else {
           sendTextMessage(senderID, "¯\\_(ツ)_/¯  ?? ---> " + messageText)
+          break;
         }
 
     }
