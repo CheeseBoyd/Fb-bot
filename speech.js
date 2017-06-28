@@ -1,4 +1,3 @@
-// Test
 'use strict'
 
 var speech_class = {
