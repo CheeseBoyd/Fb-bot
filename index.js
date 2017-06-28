@@ -78,6 +78,7 @@ function receivedMessage(event) {
   speechKeys.forEach(function(key) {
     for(let value of speech[key]) {
       let regex = new RegExp(value, 'i')
+      console.log(regex)
       if(regex.test(messageText.toLowerCase())) {
         switch(key) {
           case 'GREET':
