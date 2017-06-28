@@ -60,10 +60,6 @@ app.post('/webhook', function (req, res) {
 
 
 function receivedMessage(event) {
-console.log(speech.get());
-console.log(speech.statement);
-speech.foo()
-  
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
@@ -130,11 +126,9 @@ speech.foo()
       default:
         sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
     }
-  } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
   } else {
-    sendTextMessage(senderID, "I don't know that. I'm just a bot");
-  } 
+    sendTextMessage(senderID, "Message with attachment received");
+  }
 }
 
 
@@ -506,6 +500,11 @@ function callSendAPI(messageData) {
     }
   });  
 }
+
+
+/* Test this out by
+   Making the bot understand addiiton e.g 1 + 1 = 2
+*/
 
 function receivedPostback(event) {
   var senderID = event.sender.id;
