@@ -1,18 +1,18 @@
+// Test
 'use strict'
 
 var speech_class = {
-	keywords: {
+	words: {
 		GREET: ["hello", "how are you?", "hey"],
-		GOODBYE: ["bye", "goodbye", "see you"]
-	},
-	response: {
-		GREET_RESPONSE: ["response to greet"],
-		GOODBYE_RESPONSE: ["response to goodbye"]
+		GOODBYE: ["bye", "goodybe", "see you"]
 	},
 	get: function(){
 		return this.words;
 	},
-
+	statement: "hello I am from speech.js",
+	foo: function() {
+		console.log("I am a function from speech.js");
+	}
 
 };
 
