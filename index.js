@@ -76,7 +76,7 @@ function receivedMessage(event) {
 
   if (messageText) {
   speechKeys.forEach(function(key) {
-    for(let value of speech[key]) {
+    for(let value in speech[key]) {
       let regex = new RegExp(value, 'i')
       console.log(regex)
       if(regex.test(messageText.toLowerCase())) {
@@ -91,7 +91,7 @@ function receivedMessage(event) {
             console.log("No match found for --> " + messageText)
         }
 
-      } else { break; }
+      }
 
     }
     });  
