@@ -76,8 +76,9 @@ function receivedMessage(event) {
 
   if (messageText) {
 //   speechKeys.forEach(function(key) {
+  var found = false;
   for (let key of speechKeys) {
-    var found = false;
+
       if(!found){
           for(let value of speech[key]) {
             let regex = new RegExp(value, 'i')
