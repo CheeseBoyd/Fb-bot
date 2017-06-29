@@ -74,33 +74,32 @@ function receivedMessage(event) {
   var messageText = message.text;
   var messageAttachments = message.attachments;
 
+  var wordsLeft = true;  
   if (messageText) {
-//   speechKeys.forEach(function(key) {
-  var found = false;
-  for (let key of speechKeys) {
-
-      if(!found){
+  speechLoop: {
+      for (let key of speechKeys) {
           for(let value of speech[key]) {
             let regex = new RegExp(value, 'i')
             console.log(regex)
             if(regex.test(messageText)) {
               // ---> 
                 if (Object.is(key, 'GREET')){
-                  sendTextMessage(senderID, "Hello there")
-                  found = true; 
-                  break;
+                  sendTextMessage(senderID, "Hello there"); 
+                  break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
                   sendTextMessage(senderID, "Goodbye there") 
-                  found = true;
-                  break;
+                  break speechLoop;
                 }
 
             }
 
           }
-      } else { break; }
-    }  
+        }
+
+        wordsLeft = false;
+  } // End of speech label
+      if(!wordsLeft) { sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)  } 
 
   } else {
     sendTextMessage(senderID, "Message with attachment received");
