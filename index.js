@@ -75,26 +75,31 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
 
   if (messageText) {
-  speechKeys.forEach(function(key) {
-    for(let value of speech[key]) {
-      let regex = new RegExp(value, 'i')
-      console.log(regex)
-      if(regex.test(messageText.toLowerCase())) {
-        switch(key) {
-          case 'GREET':
-           sendTextMessage(senderID, "HEY IT WORKS")
-            break;
-          case 'GOODBYE':
-            sendTextMessage(senderID, "GOODBYE IT WORKS")
-            break;
-          default: 
-            console.log("No match found for --> " + messageText)
-        }
+//   speechKeys.forEach(function(key) {
+  for (let key of speechKeys) {
+    var found = false;
+      if(!found){
+          for(let value of speech[key]) {
+            let regex = new RegExp(value, 'i')
+            console.log(regex)
+            if(regex.test(messageText)) {
+              // ---> 
+                if (Object.is(key, 'GREET')){
+                  sendTextMessage(senderID, "Hello there")
+                  found = true; 
+                  break;
+                }
+                else if (Object.is(key, 'GOODBYE')) {
+                  sendTextMessage(senderID, "Goodbye there") 
+                  found = true;
+                  break;
+                }
 
-      }
+            }
 
-    }
-    });  
+          }
+      } else { break; }
+    }  
 
   } else {
     sendTextMessage(senderID, "Message with attachment received");
