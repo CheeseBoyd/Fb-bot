@@ -60,6 +60,9 @@ app.post('/webhook', function (req, res) {
   }
 });
 
+function escapeChars(value) {
+     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
+}
 
 function receivedMessage(event) {
 
@@ -73,13 +76,16 @@ function receivedMessage(event) {
   var messageId = message.mid;
   var messageText = message.text;
   var messageAttachments = message.attachments;
+  var wordsLeft = true
+  var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
 
-  var wordsLeft = true;  
   if (messageText) {
   speechLoop: {
       for (let key of speechKeys) {
           for(let value of speech[key]) {
-            let regex = new RegExp(value, 'i')
+            scaffold.splice(1, 1, value)
+            let newValue = scaffold.join("")            
+            let regex = new RegExp(newValue, 'i')
             console.log(regex)
             if(regex.test(messageText)) {
               // ---> 
@@ -107,273 +113,11 @@ function receivedMessage(event) {
 }
 
 
-function sendImage(recipientId, url) {
-  var messageData = {
-  recipient:{
-    id: recipientId
-  },
-  message:{
-    attachment:{
-      type:"image",
-      payload:{
-        url: url,
-        is_reusable: true
-      }
-    }
-  }
-}
-
-callSendAPI(messageData);
-
-}
-
-/*
-* Adds quick reply functionality:
-* Can give up to 5 options
-*/
-  function quickReply(recipientId, ask, option1, option2, option3, option4, option5) {
-    var messageData = null;
-
-    if ((option3 && option4)&&option5) {
-
-        messageData = {
-        recipient:{
-          id: recipientId
-        },
-        message:{
-          text:ask,
-          quick_replies:[
-            {
-              content_type:"text",
-              title: option1,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title:option2,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-            },
-            {
-              content_type:"text",
-              title: option3,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title: option4,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title: option5,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },                              
-          ]
-        }
-      };
-      callSendAPI(messageData);           
-
-    } else if (option3 && option4) {
-
-        messageData = {
-        recipient:{
-          id: recipientId
-        },
-        message:{
-          text:ask,
-          quick_replies:[
-            {
-              content_type:"text",
-              title: option1,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title:option2,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-            },
-            {
-              content_type:"text",
-              title: option3,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title: option4,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            }                   
-          ]
-        }
-      };
-      callSendAPI(messageData);   
-
-    } else if(option3) {
-
-        messageData = {
-        recipient:{
-          id: recipientId
-        },
-        message:{
-          text:ask,
-          quick_replies:[
-            {
-              content_type:"text",
-              title: option1,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title:option2,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-            },
-            {
-              content_type:"text",
-              title: option3,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            }                             
-          ]
-        }
-      };
-      callSendAPI(messageData);        
-
-    } else {
-
-        messageData = {
-        recipient:{
-          id: recipientId
-        },
-        message:{
-          text:ask,
-          quick_replies:[
-            {
-              content_type:"text",
-              title: option1,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title:option2,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-            }
-          ]
-        }
-      };
-      callSendAPI(messageData);
-
-    }
-
-  }
-
-
-function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [{
-            title: title,
-            subtitle: subTitle,
-            item_url: url,               
-            image_url: imgUrl,
-            buttons: [{
-              type: "web_url",
-              url: url,
-              title: button1
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
-            }]
-          }]
-        }
-      }
-    }
-  };  
-
-  callSendAPI(messageData);
-}
-
-
-function displayList(recipientId) {
-var messageData = {
-  recipient:{
-    id:recipientId
-  }, message: {
-    attachment: {
-        type: "template",
-        payload: {
-            template_type: "list",
-            elements: [
-                {
-                    title: "Reddit",
-                    image_url: "https://assets.ifttt.com/images/channels/1352860597/icons/on_color_large.png",
-                    subtitle: "Stuff around the web",
-                    default_action: {
-                        type: "web_url",
-                        url: "https://www.reddit.com/",
-                        messenger_extensions: true,
-                        webview_height_ratio: "tall",
-                        fallback_url: "https://www.reddit.com/"
-                    },
-                    buttons: [
-                        {
-                            title: "See",
-                            type: "web_url",
-                            url: "https://www.reddit.com/",
-                            messenger_extensions: true,
-                            webview_height_ratio: "tall",
-                            fallback_url: "https://www.reddit.com/"                        
-                        }
-                    ]
-                },
-                {
-                    title: "9gag",
-                    image_url: "http://icons.iconarchive.com/icons/martz90/circle/512/9gag-icon.png",
-                    subtitle: "Have fun",
-                    default_action: {
-                        type: "web_url",
-                        url: "https://www.9gag.com/",
-                        messenger_extensions: true,
-                        webview_height_ratio: "tall",
-                        fallback_url: "https://www.9gag.com/"
-                    },
-                    buttons: [
-                        {
-                            title: "Shop Now",
-                            type: "web_url",
-                            url: "https://www.9gag.com/",
-                            messenger_extensions: true,
-                            webview_height_ratio: "tall",
-                            fallback_url: "https://www.9gag.com/"                        
-                        }
-                    ]                
-                }
-            ],
-             buttons: [
-                {
-                    title: "View More",
-                    type: "postback",
-                    payload: "payload"                        
-                }
-            ]  
-        }
-    }
-}
-    
-}
-
-callSendAPI(messageData);
-}
 
 /* ##############################################################################
 *  TESTING FEED PARSER API 
 */
-function testAPI(senderID){
+function getFeed(senderID){
   
 var parser = require('rss-parser');
 
