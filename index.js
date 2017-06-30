@@ -88,7 +88,6 @@ function receivedMessage(event) {
             let regex = new RegExp(newValue, 'i')
             console.log(regex)
             if(regex.test(messageText)) {
-              // ---> 
                 if (Object.is(key, 'GREET')){
                   sendTextMessage(senderID, "Hello there"); 
                   break speechLoop;
