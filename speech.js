@@ -3,7 +3,7 @@
 
 var speech_class = {
 	words: {
-		GREET: ["hello", "how are you?", "hey"],
+		GREET: ["hello", "how are you?", "hey", "get started"],
 		GOODBYE: ["bye", "goodbye", "see you"]
 	},
 	get: function(){

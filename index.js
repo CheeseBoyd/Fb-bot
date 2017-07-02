@@ -64,6 +64,28 @@ function escapeChars(value) {
      return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
 }
 
+function greet(greet){
+ var messageData = {
+    setting_type :"greeting {{user_first_name}}",
+    greeting :{
+      text: greet
+    }
+  }
+
+  callSendAPI(messageData);
+}
+
+function getStarted(){
+  var messageData = { 
+  get_started:{
+    payload:"GET_STARTED_PAYLOAD",
+    }
+  }
+  callSendAPI(messageData); 
+}
+
+greet("Hello")
+
 function receivedMessage(event) {
 
   let senderID = event.sender.id;
