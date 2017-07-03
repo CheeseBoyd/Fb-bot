@@ -91,10 +91,12 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
+                  getUserInfo(senderID)
                   sendTextMessage(senderID, "Hello there"); 
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
+                  getUserInfo(senderID)
                   sendTextMessage(senderID, "Goodbye there") 
                   break speechLoop;
                 }
@@ -199,6 +201,22 @@ function sendTextMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
+function getUserInfo(senderID){
+  request({
+    uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
+    method: 'GET'
+  }
+  function(error, response, body){
+    if(!error && response.statusCode == 200){
+      console.log(body)
+    } else {
+      console.log("Unable to send message")
+      console.log(response)
+      console.log(error)
+    }
+  })
+}
+
 function callSendAPI(messageData) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
@@ -220,7 +238,7 @@ function callSendAPI(messageData) {
     }
   });  
 }
-
+  
 
 /* Test this out by
    Making the bot understand addiiton e.g 1 + 1 = 2
