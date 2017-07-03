@@ -80,7 +80,7 @@ function receivedMessage(event) {
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
 
-  console.log(senderID)
+  console.log(knowUser(senderID))
 
   if (messageText) {
   speechLoop: {
@@ -223,6 +223,29 @@ function callSendAPI(messageData) {
 }
 
 
+
+function knowUser(senderID) {
+    var uriVal = "https://graph.facebook.com/v2.6/"+senderID+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN"
+    request({
+    uri: uriVal,
+    qs: { access_token: access },
+    method: 'GET',
+    json: messageData
+
+  }, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var recipientId = body.recipient_id;
+      var messageId = body.message_id;
+
+      console.log("Successfully sent generic message with id %s to recipient %s", 
+        messageId, recipientId);
+    } else {
+      console.error("Unable to send message.");
+      console.error(response);
+      console.error(error);
+    }
+  });  
+}
 
 
 /* Test this out by
