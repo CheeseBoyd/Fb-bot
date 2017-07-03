@@ -205,7 +205,7 @@ function getUserInfo(senderID){
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     method: 'GET'
-  }
+  },
   function(error, response, body){
     if(!error && response.statusCode == 200){
       console.log(body)
