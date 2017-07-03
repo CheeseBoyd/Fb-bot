@@ -200,14 +200,10 @@ function sendTextMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-function callSendAPI(messageData, uri, userID) {
-  var uriValue = 'https://graph.facebook.com/v2.6/me/messages'
-  if(!uri || !userID) {
-    uriValue = "https://graph.facebook.com/v2.6/" + userID +"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN"
-  }
-  console.log(JSON.stringify(messageData));
+function callSendAPI(messageData) {
+  console.log(JSON.stringify(messageData))
   request({
-    uri: uriValue,
+    uri: 'https://graph.facebook.com/v2.6/me/messages',
     qs: { access_token: access },
     method: 'POST',
     json: messageData
