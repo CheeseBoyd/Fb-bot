@@ -80,7 +80,7 @@ function receivedMessage(event) {
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
 
-  console.log(JSON.stringify(event))
+  console.log(senderID)
 
   if (messageText) {
   speechLoop: {
@@ -201,7 +201,6 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 function callSendAPI(messageData) {
-  console.log(JSON.stringify(messageData))
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
     qs: { access_token: access },
