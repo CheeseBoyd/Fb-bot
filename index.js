@@ -225,7 +225,7 @@ function callSendAPI(messageData) {
 
 
 function knowUser(senderID) {
-    var uriVal = "https://graph.facebook.com/v2.6/"+senderID+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN"
+    var uriVal = "https://graph.facebook.com/v2.6/1422532937804505?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN"
     request({
     uri: uriVal,
     qs: { access_token: access },
