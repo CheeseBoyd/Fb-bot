@@ -229,8 +229,7 @@ function knowUser(senderID) {
     request({
     uri: uriVal,
     qs: { access_token: access },
-    method: 'GET',
-    json: messageData
+    method: 'GET'
 
   }, function (error, response, body) {
     if (!error && response.statusCode == 200) {
