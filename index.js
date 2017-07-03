@@ -208,7 +208,7 @@ function getUserInfo(senderID){
   },
   function(error, response, body){
     if(!error && response.statusCode == 200){
-      console.log(body)
+      console.log(response)
     } else {
       console.log("Unable to send message")
       console.log(response)
