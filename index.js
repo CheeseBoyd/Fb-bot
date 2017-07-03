@@ -91,12 +91,12 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  getUserInfo(senderID)
+                  getUserInfo(recipientID)
                   sendTextMessage(senderID, "Hello there"); 
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
-                  getUserInfo(senderID)
+                  getUserInfo(recipientID)
                   sendTextMessage(senderID, "Goodbye there") 
                   break speechLoop;
                 }
