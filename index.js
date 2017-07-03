@@ -81,7 +81,7 @@ function receivedMessage(event) {
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
 
   console.log(JSON.stringify(event))
-  
+
   if (messageText) {
   speechLoop: {
       for (let key of speechKeys) {
@@ -200,9 +200,14 @@ function sendTextMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-function callSendAPI(messageData) {
+function callSendAPI(messageData, uri, userID) {
+  var uriValue = 'https://graph.facebook.com/v2.6/me/messages'
+  if(!uri || !userID) {
+    uriValue = "https://graph.facebook.com/v2.6/" + userID +"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN"
+  }
+  console.log(JSON.stringify(messageData));
   request({
-    uri: 'https://graph.facebook.com/v2.6/me/messages',
+    uri: uriValue,
     qs: { access_token: access },
     method: 'POST',
     json: messageData
