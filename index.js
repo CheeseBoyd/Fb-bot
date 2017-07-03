@@ -203,7 +203,7 @@ function sendTextMessage(recipientId, messageText) {
 
 function getUserInfo(senderID){
   request({
-    uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
+    uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token='+access,
     method: 'GET'
   },
   function(error, response, body){
