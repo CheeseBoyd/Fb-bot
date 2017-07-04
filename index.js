@@ -91,12 +91,11 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  getUserInfo(recipientID)
+                  getUserInfo(senderID)
                   sendTextMessage(senderID, "Hello there"); 
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
-                  getUserInfo(recipientID)
                   sendTextMessage(senderID, "Goodbye there") 
                   break speechLoop;
                 }
@@ -203,13 +202,14 @@ function sendTextMessage(recipientId, messageText) {
 
 function getUserInfo(senderID){
   request({
-    uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token='+access,
+    uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     method: 'GET'
   },
   function(error, response, body){
     if(!error && response.statusCode == 200){
-      console.log("#######################################################################----------->>>>>>>>>>>>>>>>>>>")
+      console.log('<--------------RESPONSE-------------->')         
       console.log(JSON.stringify(response))
+      console.log('<--------------RESPONSE END-------------->')      
     } else {
       console.log("Unable to send message")
       console.log(response)
