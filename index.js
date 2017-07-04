@@ -203,10 +203,11 @@ function sendTextMessage(recipientId, messageText) {
 function getUserInfo(senderID){
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
+    qs: { access_token: access },
     method: 'GET'
   },
   function(error, response, body){
-    if(!error && response.statusCode == 200){
+    if(!error){
       console.log('<--------------RESPONSE-------------->')         
       console.log(JSON.stringify(response))
       console.log('<--------------RESPONSE END-------------->')      
@@ -223,7 +224,7 @@ function getUserInfo(senderID){
 function callSendAPI(messageData) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: access },
+    
     method: 'POST',
     json: messageData
 
