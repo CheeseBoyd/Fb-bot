@@ -211,9 +211,11 @@ function getUserInfo(senderID){
       console.log(JSON.stringify(response))
       console.log('<--------------RESPONSE END-------------->')      
     } else {
+      console.log('<--------------FAIL-------------->')        
       console.log("Unable to send message")
       console.log(response)
       console.log(error)
+      console.log('<--------------FAIL END-------------->')       
     }
   })
 }
