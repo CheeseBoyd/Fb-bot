@@ -1,7 +1,6 @@
 /*
 * Load dependencies and secure access tokens
 */
-// New branch
 
 'use strict'
 
@@ -81,7 +80,6 @@ function receivedMessage(event) {
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
 
-  // TEST FOR LOCAL TRACKING BRANCH
 
   if (messageText) {
   speechLoop: {
