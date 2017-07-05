@@ -2,7 +2,6 @@
 * Load dependencies and secure access tokens
 */
 
-// T
 
 'use strict'
 
@@ -91,6 +90,7 @@ function receivedMessage(event) {
             let newValue = scaffold.join("")            
             let regex = new RegExp(newValue, 'i')
             console.log(regex)
+            getUserInfo(senderID)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
                   sendTextMessage(senderID, "Hello there"); 
