@@ -204,7 +204,7 @@ function sendTextMessage(recipientId, messageText) {
 
 function getUserInfo(senderID){
   var userInfo = null;
-  var fistName = null;
+  var firstName = null;
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
@@ -213,7 +213,7 @@ function getUserInfo(senderID){
   function(error, response, body){
     if(!error){
       userInfo = JSON.parse(response.body) // OUR JSON STRING THAT'S BEING PARED TO OBJECT
-      fistName = userInfo.first_name
+      firstName = userInfo.first_name
       console.log('<--------------RESPONSE-------------->')
       console.log(userInfo) // OUR JSON OBJECT         
       console.log("USER FIRST NAME IS ----> "+userInfo.first_name)
