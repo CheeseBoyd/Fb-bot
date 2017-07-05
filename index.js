@@ -211,9 +211,8 @@ function getUserInfo(senderID){
   },
   function(error, response, body){
     if(!error){
-      userInfo = JSON.parse(response)
       console.log('<--------------RESPONSE-------------->')         
-      console.log(JuserInfo)
+      console.log(response)
       console.log('<--------------RESPONSE END-------------->')      
     } else {
       console.log('<--------------FAIL-------------->')        
