@@ -203,6 +203,7 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 function getUserInfo(senderID){
+  var userInfo = null;
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
@@ -210,8 +211,9 @@ function getUserInfo(senderID){
   },
   function(error, response, body){
     if(!error){
+      userInfo = JSON.parse(response)
       console.log('<--------------RESPONSE-------------->')         
-      console.log(JSON.stringify(response))
+      console.log(JuserInfo)
       console.log('<--------------RESPONSE END-------------->')      
     } else {
       console.log('<--------------FAIL-------------->')        
