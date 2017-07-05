@@ -204,6 +204,7 @@ function sendTextMessage(recipientId, messageText) {
 
 function getUserInfo(senderID){
   var userInfo = null;
+  var fistName = null;
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
