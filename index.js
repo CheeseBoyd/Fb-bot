@@ -91,7 +91,6 @@ function receivedMessage(event) {
             let newValue = scaffold.join("")            
             let regex = new RegExp(newValue, 'i')
             console.log(regex)
-            getUserInfo(senderID)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
                   getUserInfo(senderID)
