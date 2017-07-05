@@ -2,57 +2,46 @@
 * Load dependencies and secure access tokens
 */
 
+'use strict'
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
-/*
-const vocabulary = require('./vocabulary.js')
-const reply = require('./reply.js')
-*/
+const sp = require('./speech.js')
+const speech = sp.get() 
+const speechKeys = Object.keys(speech) 
+
+
 
 app.set('port',(process.env.PORT || 5000))
-
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
-
 app.get('/', function (req, res) {
-	res.send("Hello World")
-  res.send("Hola")
+  res.send("Hello World")
 })
-
-// Have facebook verify the webhook token
 
 app.get('/webhook/', function(req, res) {
-	if(req.query['hub.verify_token'] === token) {
-		res.send(req.query['hub.challenge'])
-	}
+  if(req.query['hub.verify_token'] === token) {
+    res.send(req.query['hub.challenge'])
+  }
 
-	res.send('No entry')
+  res.send('No entry')
 })
 
-
-// Have facebook post on webhook
 
 app.post('/webhook', function (req, res) {
   var data = req.body;
 
-  // Make sure this is a page subscription
   if (data.object === 'page') {
-
-    // Iterate over each entry - there may be multiple if batched
     data.entry.forEach(function(entry) {
       var pageID = entry.id;
       var timeOfEvent = entry.time;
-
-      // Iterate over each messaging event
       entry.messaging.forEach(function(event) {
-      // if event is a message  
         if (event.message) {
-          receivedMessage(event);
-      // if event is a postback    
+          receivedMessage(event);  
         } else if (event.postback) {
           receivedPostback(event);
         } else {
@@ -61,284 +50,93 @@ app.post('/webhook', function (req, res) {
       });
     });
 
-    // Assume all went well.
-    //
-    // You must send back a 200, within 20 seconds, to let us know
-    // you've successfully received the callback. Otherwise, the request
-    // will time out and we will keep trying to resend.
+    /*
+     Assume all went well.
+     You must send back a 200, within 20 seconds, to let us know
+     you've successfully received the callback. Otherwise, the request
+     will time out and we will keep trying to resend.
+    */    
     res.sendStatus(200);
   }
 });
 
+function escapeChars(value) {
+     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
+}
+
 
 function receivedMessage(event) {
-  var senderID = event.sender.id;
+
+  let senderID = event.sender.id;
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
   var message = event.message;
   console.log("Received message for user %d and page %d at %d with message:", 
-    senderID, recipientID, timeOfMessage);
+  senderID, recipientID, timeOfMessage);
   console.log(JSON.stringify(message));
-
   var messageId = message.mid;
   var messageText = message.text;
   var messageAttachments = message.attachments;
+  var wordsLeft = true
+  var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
 
-  // Currently running on rss-reader
 
   if (messageText) {
+  speechLoop: {
+      for (let key of speechKeys) {
+          for(let value of speech[key]) {
+            scaffold.splice(1, 1, value)
+            let newValue = scaffold.join("")            
+            let regex = new RegExp(newValue, 'i')
+            console.log(regex)
+            if(regex.test(messageText)) {
+                if (Object.is(key, 'GREET')){
+                  sendTextMessage(senderID, "Hello there"); 
+                  break speechLoop;
+                }
+                else if (Object.is(key, 'GOODBYE')) {
+                  sendTextMessage(senderID, "Goodbye there") 
+                  break speechLoop;
+                }
 
-    switch (messageText.toLowerCase()) {
-      case 'help':
-          quickReply(senderID, "Hi. I'm a bot that can get you coffee or news. What will you have?", "try products", "get news");
-      break;      
-      case 'generic':
-        sendGenericMessage(senderID);
-        break;
-      case 'hello':
-        quickReply(senderID, "Hi I am test-bot. I can get you coffee or the latest news for you. So. what would you like?", "try products", "get news");
-      	break;
-      case 'get news':
-        singleCard(senderID, "Headlines", "More on MB.com.ph", "http://mb.com.ph/", "http://www.komikon.org/wp-content/uploads/2013/08/mb-logo-guide-1-1024x394.jpg")
-        break;
-      case 'try products':
-        singleCard(senderID, "Visit us", "Promise of good coffee just for you", "https://web.facebook.com/PaperPlusCupCoffee/", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/275px-A_small_cup_of_coffee.JPG", "I'll go there");
-        quickReply(senderID, "You can order at our location or you can order here :)", "Here", "I'll go there");
-        break;
-      case 'Here':
-        quickReply(senderID, "Okay. What will you have?", "Black Tea", "Caramel Frapp", "Black brewed","Berry Tea");
-        break;
-      case 'I\'ll go there':
-        sendTextMessage(senderID, "Okay. Were at the ground floor lobby. Bye!");
-        break;
-      case 'bot':
-      	sendTextMessage(senderID, "Yup, I'm a bot");
-      	break;
-      case 'how are you?':
-      	sendTextMessage(senderID, "I'm a bot, are you Human?");
-      	break;
-      case 'yes':
-      	sendTextMessage(senderID, "Good");
-      	break;
-      case 'menu':
-        quickReply(senderID, "Have food and beverages which would you like? ", "food", "beverage");
-        break;        
-      case 'push to master':
-      	sendTextMessage(senderID, "Authenticated to master");
-      	break;
-      case 'push to test-deploy':
-        sendTextMessage(senderID, "Authenticated to test-deploy");
-        break;
-      case 'doom':
-        sendImage(senderID, "https://i.ytimg.com/vi/RO90omga8D4/maxresdefault.jpg");
-        break;
-      default:
-        sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText);
-    }
-  } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
-  } else {
-    sendTextMessage(senderID, "I don't know that. I'm just a bot");
-  } 
-}
-
-
-let fun = ()=> {
-          let tokenizer = messageText.split(/\s/gi);
-          let out = tokenizer.join("");
-          return out;
-};
-
-function sendImage(recipientId, url) {
-  var messageData = {
-  recipient:{
-    id: recipientId
-  },
-  message:{
-    attachment:{
-      type:"image",
-      payload:{
-        url: url,
-        is_reusable: true
-      }
-    }
-  }
-}
-
-callSendAPI(messageData);
-
-}
-
-/*
-* Adds quick reply functionality:
-* Can give up to 5 options
-*/
-  function quickReply(recipientId, ask, option1, option2, option3, option4, option5) {
-    var messageData = null;
-
-    if ((option3 && option4)&&option5) {
-
-        messageData = {
-        recipient:{
-          id: recipientId
-        },
-        message:{
-          text:ask,
-          quick_replies:[
-            {
-              content_type:"text",
-              title: option1,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title:option2,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-            },
-            {
-              content_type:"text",
-              title: option3,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title: option4,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title: option5,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },                              
-          ]
-        }
-      };
-      callSendAPI(messageData);           
-
-    } else if (option3 && option4) {
-
-        messageData = {
-        recipient:{
-          id: recipientId
-        },
-        message:{
-          text:ask,
-          quick_replies:[
-            {
-              content_type:"text",
-              title: option1,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title:option2,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-            },
-            {
-              content_type:"text",
-              title: option3,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title: option4,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            }                   
-          ]
-        }
-      };
-      callSendAPI(messageData);   
-
-    } else if(option3) {
-
-        messageData = {
-        recipient:{
-          id: recipientId
-        },
-        message:{
-          text:ask,
-          quick_replies:[
-            {
-              content_type:"text",
-              title: option1,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title:option2,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
-            },
-            {
-              content_type:"text",
-              title: option3,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            }                             
-          ]
-        }
-      };
-      callSendAPI(messageData);        
-
-    } else {
-
-        messageData = {
-        recipient:{
-          id: recipientId
-        },
-        message:{
-          text:ask,
-          quick_replies:[
-            {
-              content_type:"text",
-              title: option1,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            },
-            {
-              content_type:"text",
-              title:option2,
-              payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_GREEN"
             }
-          ]
+
+          }
         }
-      };
-      callSendAPI(messageData);
 
-    }
+        wordsLeft = false;
+  } // End of speech label
+      if(!wordsLeft) { sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)  } 
 
+  } else {
+    sendTextMessage(senderID, "Message with attachment received");
   }
-
-
-function singleCard(recipientId, title, subTitle, url, imgUrl, button1) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [{
-            title: title,
-            subtitle: subTitle,
-            item_url: url,               
-            image_url: imgUrl,
-            buttons: [{
-              type: "web_url",
-              url: url,
-              title: button1
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
-            }]
-          }]
-        }
-      }
-    }
-  };  
-
-  callSendAPI(messageData);
 }
+
+
+
+/* ##############################################################################
+*  TESTING FEED PARSER API 
+*/
+function getFeed(senderID){
+  
+var parser = require('rss-parser');
+
+parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
+  console.log(parsed.feed.title);
+  parsed.feed.entries.forEach(function(entry) {
+
+ console.log(Object.getOwnPropertyNames(entry));
+// inject output to messenger card
+singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "see more");
+
+    console.log(entry.title + ':' + entry.link);
+  })
+}); 
+
+
+}
+
 
 function sendGenericMessage(recipientId) {
   var messageData = {
@@ -401,6 +199,27 @@ function sendTextMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
+function getUserInfo(senderID){
+  request({
+    uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
+    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
+    method: 'GET'
+  },
+  function(error, response, body){
+    if(!error){
+      console.log('<--------------RESPONSE-------------->')         
+      console.log(response)
+      console.log('<--------------RESPONSE END-------------->')      
+    } else {
+      console.log('<--------------FAIL-------------->')        
+      console.log("Unable to send message")
+      console.log(response)
+      console.log(error)
+      console.log('<--------------FAIL END-------------->')       
+    }
+  })
+}
+
 function callSendAPI(messageData) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
@@ -422,6 +241,11 @@ function callSendAPI(messageData) {
     }
   });  
 }
+  
+
+/* Test this out by
+   Making the bot understand addiiton e.g 1 + 1 = 2
+*/
 
 function receivedPostback(event) {
   var senderID = event.sender.id;
@@ -443,5 +267,5 @@ function receivedPostback(event) {
 
 
 app.listen(app.get('port'), function() {
-	console.log('Running on port', app.get('port'))
+  console.log('Running on port', app.get('port'))
 }) 
