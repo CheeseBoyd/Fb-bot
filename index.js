@@ -81,6 +81,7 @@ function receivedMessage(event) {
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
 
+// PUHS
 
   if (messageText) {
   speechLoop: {
