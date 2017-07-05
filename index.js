@@ -80,6 +80,7 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
+  var userName = getUserInfo(senderID)
 
 // PUHS
 
@@ -94,7 +95,7 @@ function receivedMessage(event) {
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
                   
-                  sendTextMessage(senderID, "Hello " + getUserInfo(senderID) + " how's the bot doing?"); 
+                  sendTextMessage(senderID, "Hello " +userName+ " how's the bot doing?"); 
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
