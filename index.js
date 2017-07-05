@@ -212,7 +212,7 @@ function getUserInfo(senderID){
   function(error, response, body){
     if(!error){
       console.log('<--------------RESPONSE-------------->')         
-      console.log(response)
+      console.log(JSON.parse(response.body))
       console.log('<--------------RESPONSE END-------------->')      
     } else {
       console.log('<--------------FAIL-------------->')        
