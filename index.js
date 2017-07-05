@@ -93,8 +93,8 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  getUserInfo(senderID)
-                  sendTextMessage(senderID, "Hello there"); 
+                  
+                  sendTextMessage(senderID, "Hello " + getUserInfo(senderID) + " how's the bot doing?"); 
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
@@ -211,11 +211,13 @@ function getUserInfo(senderID){
   },
   function(error, response, body){
     if(!error){
-      userInfo = JSON.parse(response.body)
-      console.log('<--------------RESPONSE-------------->')         
+      userInfo = JSON.parse(response.body) // OUR JSON STRING THAT'S BEING PARED TO OBJECT
+      fistName = userInfo.first_name
+      console.log('<--------------RESPONSE-------------->')
+      console.log(userInfo) // OUR JSON OBJECT         
       console.log("USER FIRST NAME IS ----> "+userInfo.first_name)
-      console.log("USER LAST NAME IS -----> "+userInfo.last_name)
-      console.log('<--------------RESPONSE END-------------->')      
+      console.log('<--------------RESPONSE END-------------->')
+      return firstName      
     } else {
       console.log('<--------------FAIL-------------->')        
       console.log("Unable to send message")
