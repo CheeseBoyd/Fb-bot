@@ -81,7 +81,6 @@ function receivedMessage(event) {
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
   var userName = getUserInfo(senderID) // gets user obj
-  console.log(userName)
 
   if (messageText) {
   speechLoop: {
@@ -210,11 +209,13 @@ function getUserInfo(senderID){
       function(error, response, body){
         var user = null
         if(!error){
-          user = JSON.parse(response.body) 
+          user = JSON.parse(response.body)
+          /* 
           console.log('<--------------RESPONSE-------------->')
           console.log(user) 
           console.log("USER FIRST NAME IS ----> "+user.first_name)
           console.log('<--------------RESPONSE END-------------->')
+          */
           return user
         } else {
           console.log('<--------------FAIL-------------->')        
@@ -225,7 +226,9 @@ function getUserInfo(senderID){
           return false     
         }
       })
-
+  console.log("<-----<USERINFO>------>")
+  console.log(userInfo)
+  console.log("<-----<USERINFO-END>------>")
   return userInfo
 }
 
