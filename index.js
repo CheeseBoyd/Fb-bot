@@ -82,7 +82,6 @@ function receivedMessage(event) {
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
   var userName = getUserInfo(senderID) // gets user first name
 
-
   if (messageText) {
   speechLoop: {
       for (let key of speechKeys) {
@@ -211,21 +210,20 @@ function getUserInfo(senderID){
   },
   function(error, response, body){
     if(!error){
-      userInfo = JSON.parse(response.body) // OUR JSON STRING THAT'S BEING PARED TO OBJECT
+      userInfo = JSON.parse(response.body) 
       console.log('<--------------RESPONSE-------------->')
-      console.log(userInfo) // OUR JSON OBJECT         
+      console.log(userInfo) 
       console.log("USER FIRST NAME IS ----> "+userInfo.first_name)
       console.log('<--------------RESPONSE END-------------->')
-      return userInfo
     } else {
       console.log('<--------------FAIL-------------->')        
       console.log("Unable to send message")
       console.log(response)
       console.log(error)
-      console.log('<--------------FAIL END-------------->')
-      return false       
+      console.log('<--------------FAIL END-------------->')     
     }
   })
+  return userInfo
 }
 
 function callSendAPI(messageData) {
