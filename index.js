@@ -81,6 +81,7 @@ function receivedMessage(event) {
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
   var userName = getUserInfo(senderID) // gets user obj
+  console.log(userName)
 
   if (messageText) {
   speechLoop: {
@@ -92,7 +93,7 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){ 
-                  sendTextMessage(senderID, "Hello " +userName.first_name+ " how's the bot doing?"); 
+                  sendTextMessage(senderID, "Hello how's the bot doing?"); 
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
