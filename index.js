@@ -214,7 +214,7 @@ function getUserInfo(senderID){
       console.log(user) 
       console.log("USER FIRST NAME IS ----> "+user.first_name)
       console.log('<--------------RESPONSE END-------------->')
-      sendTextMessage(user.first_name + " How 'ya doin'?")
+      sendTextMessage(senderID, user.first_name + " How 'ya doin'?")
     } else {
       console.log('<--------------FAIL-------------->')        
       console.log("Unable to send message")
