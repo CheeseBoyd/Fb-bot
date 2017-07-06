@@ -80,9 +80,8 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
-  var userName = getUserInfo(senderID)
+  var userName = getUserInfo(senderID) // gets user first name
 
-// PUHS
 
   if (messageText) {
   speechLoop: {
@@ -93,8 +92,7 @@ function receivedMessage(event) {
             let regex = new RegExp(newValue, 'i')
             console.log(regex)
             if(regex.test(messageText)) {
-                if (Object.is(key, 'GREET')){
-                  
+                if (Object.is(key, 'GREET')){ 
                   sendTextMessage(senderID, "Hello " +userName+ " how's the bot doing?"); 
                   break speechLoop;
                 }
@@ -205,6 +203,7 @@ function sendTextMessage(recipientId, messageText) {
 
 function getUserInfo(senderID){
   var userInfo = null;
+  var userName = null;
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
@@ -213,17 +212,19 @@ function getUserInfo(senderID){
   function(error, response, body){
     if(!error){
       userInfo = JSON.parse(response.body) // OUR JSON STRING THAT'S BEING PARED TO OBJECT
+      userName = userInfo.first_name
       console.log('<--------------RESPONSE-------------->')
       console.log(userInfo) // OUR JSON OBJECT         
       console.log("USER FIRST NAME IS ----> "+userInfo.first_name)
       console.log('<--------------RESPONSE END-------------->')
-      return userInfo.first_name.toString()      
+      return userName
     } else {
       console.log('<--------------FAIL-------------->')        
       console.log("Unable to send message")
       console.log(response)
       console.log(error)
-      console.log('<--------------FAIL END-------------->')       
+      console.log('<--------------FAIL END-------------->')
+      return "HUMAN"       
     }
   })
 }
