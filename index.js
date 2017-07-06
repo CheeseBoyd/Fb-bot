@@ -80,7 +80,7 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
-  var userName = getUserInfo(senderID) // gets user first name
+  var userName = getUserInfo(senderID) // gets user obj
 
   if (messageText) {
   speechLoop: {
@@ -201,28 +201,30 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 function getUserInfo(senderID){
-  var userInfo = null;
-  var userName = null;
-  request({
+  var userInfo = request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
     method: 'GET'
   },
-  function(error, response, body){
-    if(!error){
-      userInfo = JSON.parse(response.body) 
-      console.log('<--------------RESPONSE-------------->')
-      console.log(userInfo) 
-      console.log("USER FIRST NAME IS ----> "+userInfo.first_name)
-      console.log('<--------------RESPONSE END-------------->')
-    } else {
-      console.log('<--------------FAIL-------------->')        
-      console.log("Unable to send message")
-      console.log(response)
-      console.log(error)
-      console.log('<--------------FAIL END-------------->')     
-    }
-  })
+      function(error, response, body){
+        var user = null
+        if(!error){
+          user = JSON.parse(response.body) 
+          console.log('<--------------RESPONSE-------------->')
+          console.log(user) 
+          console.log("USER FIRST NAME IS ----> "+user.first_name)
+          console.log('<--------------RESPONSE END-------------->')
+          return user
+        } else {
+          console.log('<--------------FAIL-------------->')        
+          console.log("Unable to send message")
+          console.log(response)
+          console.log(error)
+          console.log('<--------------FAIL END-------------->')
+          return false     
+        }
+      })
+
   return userInfo
 }
 
