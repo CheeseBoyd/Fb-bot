@@ -2,15 +2,19 @@
 
 var speech_class = {
 	words: {
-		GREET: ["hello", "how are you?", "hey"],
-		GOODBYE: ["bye", "goodybe", "see you"]
+		GREET: ["hello", "how are you?", "hey", "get started"],
+		GOODBYE: ["bye", "goodbye", "see you"]
 	},
 	get: function(){
 		return this.words;
 	},
-	statement: "hello I am from speech.js",
-	foo: function() {
-		console.log("I am a function from speech.js");
+	logKeyWords: function(){
+		var word = this.words;
+		word.forEach(function(key){
+			word[key].forEach(function(keywords){
+				console.log(keywords);
+			})
+		})
 	}
 
 };
