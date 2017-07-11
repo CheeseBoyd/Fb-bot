@@ -92,7 +92,7 @@ function receivedMessage(event) {
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
                   getUserInfo(senderID)                 
-                  sendTextMessage(senderID, "Hey how's the bot doing?") 
+                  sendTextMessage(senderID, sp.getRandomResponse('R_GREET')) 
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {

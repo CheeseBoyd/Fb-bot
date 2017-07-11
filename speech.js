@@ -6,6 +6,16 @@ var speech_class = {
 		GREET: ["hello", "how are you?", "hey", "get started"],
 		GOODBYE: ["bye", "goodbye", "see you"]
 	},
+	response: {
+		R_GREET: ["hello", "Howdy", "Sayonara!", "Monday"],
+		R_GOODBYE: ["bye bye", "see ya", "til next time"]
+	},
+	getRandomResponse: function(responseType){		
+		var res = this.response
+		if(res[responseType]){
+			return res[responseType][getRandomInt(0, res[responseType].length)]
+		}
+	},
 	get: function(){
 		return this.words;
 	},
@@ -19,6 +29,14 @@ var speech_class = {
 	}
 
 };
+
+// Helper function
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
 
 
 
@@ -74,3 +92,5 @@ keys.forEach(function(key) {
 
 
 */
+
+
