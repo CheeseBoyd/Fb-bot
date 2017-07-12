@@ -4,11 +4,13 @@
 var speech_class = {
 	words: {
 		GREET: ["hello", "how are you?", "hey", "get started"],
-		GOODBYE: ["bye", "goodbye", "see you"]
+		GOODBYE: ["bye", "goodbye", "see you"],
+		INQUIRE: ["Help", "Confused"]
 	},
 	response: {
-		R_GREET: ["hello", "Howdy", "Sayonara!", "Monday"],
-		R_GOODBYE: ["bye bye", "see ya", "til next time"]
+		R_GREET: ["hello", "Howdy", "hey!", "hola"],
+		R_GOODBYE: ["bye bye", "see ya", "til next time"],
+		R_INQUIRE: ["Hi I'm a just bot and I don't know much . . . yet", "Bear with me. The dev is distracted"]
 	},
 	getRandomResponse: function(responseType){		
 		var res = this.response

@@ -96,9 +96,12 @@ function receivedMessage(event) {
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
-                  sendTextMessage(senderID, "Goodbye there") 
+                  sendTextMessage(senderID, sp.getRandomResponse('R_GOODBYE'))  
                   break speechLoop;
-                }
+                } else if(Object.is(key, 'INQUIRE')){
+                  sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))
+                  break speechLoop; // gotta be a better way to do this... 
+                } 
 
             }
 
@@ -214,7 +217,7 @@ function getUserInfo(senderID){
       console.log(user) 
       console.log("USER FIRST NAME IS ----> "+user.first_name)
       console.log('<--------------RESPONSE END-------------->')
-      sendTextMessage(senderID, user.first_name + " How 'ya doin'?")
+      sendTextMessage(senderID, "stop being lazy ---> "+user.first_name)
     } else {
       console.log('<--------------FAIL-------------->')        
       console.log("Unable to send message")
