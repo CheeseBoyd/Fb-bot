@@ -100,6 +100,7 @@ function receivedMessage(event) {
                   break speechLoop;
                 } else if(Object.is(key, 'INQUIRE')){
                   sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))
+                  sendGenericMessage(senderID)
                   break speechLoop; // gotta be a better way to do this... 
                 } 
 
@@ -139,6 +140,54 @@ singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "s
 
 
 }
+
+function sendGenericMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: "rift",
+            subtitle: "Next-generation virtual reality",
+            item_url: "https://www.oculus.com/en-us/rift/",               
+            image_url: "http://messengerdemo.parseapp.com/img/rift.png",
+            buttons: [{
+              type: "web_url",
+              url: "https://www.oculus.com/en-us/rift/",
+              title: "Open Web URL"
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for first bubble",
+            }],
+          }, {
+            title: "touch",
+            subtitle: "Your Hands, Now in VR",
+            item_url: "https://www.oculus.com/en-us/touch/",               
+            image_url: "http://messengerdemo.parseapp.com/img/touch.png",
+            buttons: [{
+              type: "web_url",
+              url: "https://www.oculus.com/en-us/touch/",
+              title: "Open Web URL"
+            }, {
+              type: "postback",
+              title: "Call Postback",
+              payload: "Payload for second bubble",
+            }]
+          }]
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+}
+
 
 // TEST Greeting text & Get Started button
 
@@ -227,9 +276,10 @@ function receivedPostback(event) {
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
   var payload = event.postback.payload;
-
+  console.log("-------XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-----------------")
   console.log("Received postback for user %d and page %d with payload '%s' " + 
     "at %d", senderID, recipientID, payload, timeOfPostback);
+  console.log("-------YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY-----------------")
 
   // When a postback is called, we'll send a message back to the sender to 
   // let them know it was successful
