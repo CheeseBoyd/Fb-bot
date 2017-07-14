@@ -80,7 +80,7 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
-
+  getStarted()
   if (messageText) {
   speechLoop: {
       for (let key of speechKeys) {
@@ -91,7 +91,7 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  getUserInfo(senderID)                 
+                  getUserInfo(senderID, "Hello")                 
                   sendTextMessage(senderID, sp.getRandomResponse('R_GREET')) 
                   break speechLoop;
                 }
@@ -131,7 +131,6 @@ parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
   parsed.feed.entries.forEach(function(entry) {
 
  console.log(Object.getOwnPropertyNames(entry));
-// inject output to messenger card
 singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "see more");
 
     console.log(entry.title + ':' + entry.link);
@@ -141,50 +140,14 @@ singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "s
 
 }
 
+// TEST Greeting text & Get Started button
 
-function sendGenericMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [{
-            title: "rift",
-            subtitle: "Next-generation virtual reality",
-            item_url: "https://www.oculus.com/en-us/rift/",               
-            image_url: "http://messengerdemo.parseapp.com/img/rift.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/rift/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
-            }],
-          }, {
-            title: "touch",
-            subtitle: "Your Hands, Now in VR",
-            item_url: "https://www.oculus.com/en-us/touch/",               
-            image_url: "http://messengerdemo.parseapp.com/img/touch.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/touch/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for second bubble",
-            }]
-          }]
-        }
-      }
+function getStarted(){
+  var messageData = { 
+    "get_started":{
+      "payload":"GET_STARTED_PAYLOAD"
     }
-  };  
+  }
 
   callSendAPI(messageData);
 }
@@ -203,7 +166,7 @@ function sendTextMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-function getUserInfo(senderID){
+function getUserInfo(senderID, initalGreetMsg){
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
@@ -217,7 +180,7 @@ function getUserInfo(senderID){
       console.log(user) 
       console.log("USER FIRST NAME IS ----> "+user.first_name)
       console.log('<--------------RESPONSE END-------------->')
-      sendTextMessage(senderID, "stop being lazy ---> "+user.first_name)
+      sendTextMessage(senderID, initalGreetMsg+ " " +user.first_name)
     } else {
       console.log('<--------------FAIL-------------->')        
       console.log("Unable to send message")
