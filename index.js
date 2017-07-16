@@ -66,6 +66,9 @@ function escapeChars(value) {
 }
 
 
+greetingText()
+// getStarted()
+
 function receivedMessage(event) {
 
   let senderID = event.sender.id;
@@ -80,7 +83,6 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
-  getStarted()
   if (messageText) {
   speechLoop: {
       for (let key of speechKeys) {
@@ -188,8 +190,22 @@ function sendGenericMessage(recipientId) {
   callSendAPI(messageData);
 }
 
+/*#################--PRE-LAUNCH CHECKLIST--######################*/
 
 // TEST Greeting text & Get Started button
+
+function greetingText(){
+  var messageData = {
+    "setting_type":"greeting",
+    "greeting":{
+      "text":"Hola mundo!"
+    }
+  }
+
+  callSendAPI(messageData)
+}
+
+
 
 function getStarted(){
   var messageData = { 
@@ -201,6 +217,7 @@ function getStarted(){
   callSendAPI(messageData);
 }
 
+/*#################--PRE-LAUNCH CHECKLIST--######################*/
 
 function sendTextMessage(recipientId, messageText) {
   var messageData = {
@@ -264,9 +281,6 @@ function callSendAPI(messageData) {
 }
   
 
-/* Test this out by
-   Making the bot understand addiiton e.g 1 + 1 = 2
-*/
 
 function receivedPostback(event) {
   var senderID = event.sender.id;
@@ -276,10 +290,8 @@ function receivedPostback(event) {
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
   var payload = event.postback.payload;
-  console.log("-------XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-----------------")
   console.log("Received postback for user %d and page %d with payload '%s' " + 
     "at %d", senderID, recipientID, payload, timeOfPostback);
-  console.log("-------YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY-----------------")
 
   // When a postback is called, we'll send a message back to the sender to 
   // let them know it was successful
