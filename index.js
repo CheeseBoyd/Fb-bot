@@ -67,7 +67,7 @@ function escapeChars(value) {
 
 
 greetingText()
-// getStarted()
+getStarted()
 
 function receivedMessage(event) {
 
@@ -202,7 +202,7 @@ function greetingText(){
     }
   }
 
-  callSendAPI(messageData)
+  startConvo(messageData)
 }
 
 
@@ -214,8 +214,34 @@ function getStarted(){
     }
   }
 
-  callSendAPI(messageData);
+  startConvo(messageData)
 }
+
+
+
+function startConvo(messageData){
+  request({
+    uri: 'https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN',
+    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
+    method: 'POST',
+    json: messageData
+  },
+  function(error, response, body){
+    if(!error){
+      console.log('<--------STARTED CONVO RESPONSE-------->')
+      console.log(JSON.parse(response.body))
+      console.log('<------STARTED CONVO RESPONSE END------>')      
+    } else {
+      console.log('<--------------FAILED CONVO INIT-------------->')        
+      console.log("Unable to send message")
+      console.log(response)
+      console.log(error)
+      console.log('<--------------FAIL CONVO INIT END-------------->')    
+    }
+  })
+}
+
+// "https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN" 
 
 /*#################--PRE-LAUNCH CHECKLIST--######################*/
 
