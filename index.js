@@ -214,7 +214,7 @@ function getStarted(){
     }
   }
 
-  startConvo(messageData)
+  getStartedButton(messageData)
 }
 
 
