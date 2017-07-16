@@ -196,8 +196,8 @@ function sendGenericMessage(recipientId) {
 
 function greetingText(){
   var messageData = {
-    "setting_type":"greeting",
-    "greeting":{
+    setting_type:"greeting",
+    greeting:{
       "text":"Hola mundo!"
     }
   }
@@ -209,7 +209,7 @@ function greetingText(){
 
 function getStarted(){
   var messageData = { 
-    "get_started":{
+    get_started:{
       "payload":"GET_STARTED_PAYLOAD"
     }
   }
