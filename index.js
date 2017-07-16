@@ -210,7 +210,7 @@ function greetingText(){
 function getStarted(){
   var messageData = { 
     get_started:{
-      "payload":"GET_STARTED_PAYLOAD"
+      payload:"GET_STARTED_PAYLOAD"
     }
   }
 
@@ -218,6 +218,27 @@ function getStarted(){
 }
 
 
+function getStartedButton(messageData){
+  request({
+    uri: 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=PAGE_ACCESS_TOKEN',
+    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
+    method: 'POST',
+    json: messageData
+  },
+  function(error, response, body){
+    if(!error){
+      console.log('<--------STARTED BUTTON RESPONSE-------->')
+      console.log(response)
+      console.log('<------STARTED BUTTON RESPONSE END------>')      
+    } else {
+      console.log('<--------------FAILED BUTTON INIT-------------->')        
+      console.log("Unable to send message")
+      console.log(response)
+      console.log(error)
+      console.log('<--------------FAIL BUTTON INIT END-------------->')    
+    }
+  })  
+}
 
 function startConvo(messageData){
   request({
