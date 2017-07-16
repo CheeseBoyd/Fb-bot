@@ -229,7 +229,7 @@ function startConvo(messageData){
   function(error, response, body){
     if(!error){
       console.log('<--------STARTED CONVO RESPONSE-------->')
-      console.log(JSON.parse(response.body))
+      console.log(response)
       console.log('<------STARTED CONVO RESPONSE END------>')      
     } else {
       console.log('<--------------FAILED CONVO INIT-------------->')        
