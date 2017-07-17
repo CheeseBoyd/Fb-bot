@@ -69,7 +69,7 @@ function escapeChars(value) {
 
 greetingText()
 getStarted()
-makeMenu()
+makeMenu() 
 
 
 function receivedMessage(event) {
@@ -97,7 +97,7 @@ function receivedMessage(event) {
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
                   getUserInfo(senderID, "Hello")                 
-                  sendTextMessage(senderID, sp.getRandomResponse('R_GREET')) 
+                  sendTextMessage(senderID, sp.getRandomResponse('R_GREET'))                  
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
@@ -240,7 +240,10 @@ function getStartedButton(messageData){
       console.log(error)
       console.log('<--------------FAIL BUTTON INIT END-------------->')    
     }
-  })  
+  })
+
+/* NOTE: To test *this* on messenger you first need to clear the data and any instance of 
+  any previous conversation in order for the button to appear  */
 }
 
 function startConvo(messageData){
@@ -297,13 +300,13 @@ function makeMenu(){
           {
             type:"web_url",
             title:"Latest News",
-            url:"https://www.thetimes.co.uk/",
+            url:"https://www.reddit.com/",
             webview_height_ratio:"full"
           }
         ]
       },
       {
-        locale:"en_US",
+        locale:"default",
         composer_input_disabled:false
       }
     ]
@@ -332,7 +335,9 @@ function showPersitentMenu(messageData){
       console.log(error)
       console.log('<--------------MENU INIT END-------------->')    
     }
-  })  
+  })
+
+
 } 
 
 /*#################--PRE-LAUNCH CHECKLIST--######################*/
