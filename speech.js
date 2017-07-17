@@ -3,9 +3,9 @@
 
 var speech_class = {
 	words: {
-		GREET: ["hello", "how are you?", "hey", "get started"],
+		GREET: ["hello", "hi", "hey", "sup"],
 		GOODBYE: ["bye", "goodbye", "see you"],
-		INQUIRE: ["Help", "Confused"]
+		INQUIRE: ["help", "confused"]
 	},
 	response: {
 		R_GREET: ["hello", "Howdy", "hey!", "hola"],

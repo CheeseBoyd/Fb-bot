@@ -66,8 +66,11 @@ function escapeChars(value) {
 }
 
 
+
 greetingText()
 getStarted()
+makeMenu()
+
 
 function receivedMessage(event) {
 
@@ -262,9 +265,77 @@ function startConvo(messageData){
   })
 }
 
-// "https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN" 
+// "https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN"
+function makeMenu(){
+  var messageData = {
+    "persistent_menu":[
+      {
+        "locale":"default",
+        "composer_input_disabled":true,
+        "call_to_actions":[
+          {
+            "title":"My Account",
+            "type":"nested",
+            "call_to_actions":[
+              {
+                "title":"Pay Bill",
+                "type":"postback",
+                "payload":"PAYBILL_PAYLOAD"
+              },
+              {
+                "title":"History",
+                "type":"postback",
+                "payload":"HISTORY_PAYLOAD"
+              },
+              {
+                "title":"Contact Info",
+                "type":"postback",
+                "payload":"CONTACT_INFO_PAYLOAD"
+              }
+            ]
+          },
+          {
+            "type":"web_url",
+            "title":"Latest News",
+            "url":"http://petershats.parseapp.com/hat-news",
+            "webview_height_ratio":"full"
+          }
+        ]
+      },
+      {
+        "locale":"zh_CN",
+        "composer_input_disabled":false
+      }
+    ]
+  }
+  showPersitentMenu(messageData)
+}
+
+
+function showPersitentMenu(messageData){
+  request({
+    uri: 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE',
+    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
+    method: 'POST',
+    json: messageData
+  },
+   function(error, response, body){
+    if(!error){
+      console.log('<--------P_MENU START-------->')
+      console.log(response)
+      console.log('<------P MENU END------>')      
+    } else {
+      console.log('<--------------MENU INIT-------------->')        
+      console.log("Unable to send message")
+      console.log(response)
+      console.log(error)
+      console.log('<--------------MENU INIT END-------------->')    
+    }
+  })  
+} 
 
 /*#################--PRE-LAUNCH CHECKLIST--######################*/
+
 
 function sendTextMessage(recipientId, messageText) {
   var messageData = {
@@ -337,6 +408,7 @@ function receivedPostback(event) {
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
   var payload = event.postback.payload;
+  // if payload is radarada... so on.. do this ->
   console.log("Received postback for user %d and page %d with payload '%s' " + 
     "at %d", senderID, recipientID, payload, timeOfPostback);
 
