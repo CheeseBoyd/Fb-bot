@@ -67,7 +67,7 @@ function escapeChars(value) {
 }
 
 
-
+/*Initial interaction with user*/
 greetingText()
 getStarted()
 
@@ -97,9 +97,9 @@ function receivedMessage(event) {
             let regex = new RegExp(newValue, 'i')
             console.log(regex)
             if(regex.test(messageText)) {
-                if (Object.is(key, 'GREET')){               
-                  sendTextMessage(senderID, sp.getRandomResponse('R_GREET'))
-                  makeMenu()                   
+                if (Object.is(key, 'GREET')){
+                  makeMenu()                 
+                  sendTextMessage(senderID, sp.getRandomResponse('R_GREET'))                 
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
@@ -182,7 +182,7 @@ function greetingText(){
   var messageData = {
     setting_type:"greeting",
     greeting:{
-      "text":"Hola mundo!"
+      "text":"Say Hello to me!"
     }
   }
 
@@ -256,32 +256,56 @@ function makeMenu(){
         composer_input_disabled:true,
         call_to_actions:[
           {
-            title:"My Account",
+            type:"web_url",
+            title:"r/news",
+            url:"https://www.reddit.com/r/news/",
+            webview_height_ratio:"full"
+          },        
+          {
+            title:"Get local news",
             type:"nested",
             call_to_actions:[
               {
-                title:"Pay Bill",
-                type:"postback",
-                payload:"PAYBILL_PAYLOAD"
+                type:"web_url",
+                title:"Manila Bulletin",
+                url:"http://mb.com.ph/",
+                webview_height_ratio:"full" // 
               },
               {
-                title:"History",
-                type:"postback",
-                payload:"HISTORY_PAYLOAD"
+                type:"web_url",
+                title:"Philippine Star",
+                url:"http://www.philstar.com/",
+                webview_height_ratio:"full"
               },
               {
-                title:"Contact Info",
+                type:"web_url",
+                title:"Daily Inquirer",
+                url:"http://www.inquirer.net/",
+                webview_height_ratio:"full"
+              },
+              {
+                type:"web_url",
+                title:"The Manila Times",
+                url:"http://www.manilatimes.net/news/",
+                webview_height_ratio:"full"
+              },
+              {
+                title:"Up to 5 Items Only",
                 type:"postback",
-                payload:"CONTACT_INFO_PAYLOAD"
-              }
+                payload:"ITEM_5_PAYLOAD"
+              }                            
             ]
           },
           {
-            type:"web_url",
-            title:"Latest News",
-            url:"https://www.reddit.com/",
-            webview_height_ratio:"full"
-          }
+            title: "Do a postback",
+            type: "postback",
+            payload: "Top_Level_menu_PostBack"
+          },
+          {
+            title: "Do another postback",
+            type: "postback",
+            payload: "Top_Level_menu_PostBack2"
+          }          
         ]
       },
       {
@@ -304,23 +328,25 @@ function showPersitentMenu(messageData){
   },
    function(error, response, body){
     if(!error){
-      console.log('<--------P_MENU START-------->')
-      console.log(response)
-      console.log('<------P MENU END------>')      
+      console.log('Persistent menu status:')
+      console.log(JSON.parse(response.body))    
     } else {
-      console.log('<--------------MENU INIT-------------->')        
+      console.log('Persistent menu failed: ------------------>')        
       console.log("Unable to send message")
       console.log(response)
-      console.log(error)
-      console.log('<--------------MENU INIT END-------------->')    
+      console.log("<---------ERROR MESSAGE START-------------->")
+      console.log(error) 
+      console.log("<----------ERROR MESSAGE END--------------->")    
     }
   })
 
 
 }
 
-/* NOTE: To test 'get-started button' on messenger you first need to clear the data and any instance of 
-  any previous conversation in order for the button to appear  */
+/* NOTE: To test 'get-started button' on messenger app you first need to clear the data and any instance of 
+  any previous conversation in order for the button to appear
+  OR
+  Use messenger.com
 /*
 
 for persistend menu --> make a POST request at https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE
@@ -336,7 +362,8 @@ function makeRequests(messageData, method, uri){
   },
    function(error, response, body){
     if(!error){
-      console.log(response)    
+      console.log(method + " request to: " + url)
+      console.log(JSON.parse(response.body))    
     } else {       
       console.log("Unable to send " + method + " request to " + url)
       console.log(response)
@@ -394,11 +421,9 @@ function callUserAPI(senderID){
     method: 'GET'
   },
   function(error, response, body){
-    var user = null
     if(!error){
-      user = JSON.parse(response.body)
       console.log(user)
-      userMap = new Map(Object.entries(user))
+      userMap = new Map(Object.entries(JSON.parse(response.body)))
       console.log(userMap)
     } else {      
       console.log("Unable to call UserAPI")
@@ -441,6 +466,8 @@ function receivedPostback(event) {
   var payload = event.postback.payload;
   if(payload == 'GET_STARTED_PAYLOAD'){
     sendTextMessage(senderID, "get started payload delivered and filtered");
+    makeMenu() 
+    return true
   }
   // if payload is radarada... so on.. do this ->
   console.log("Received postback for user %d and page %d with payload '%s' " + 
