@@ -269,7 +269,7 @@ function makeMenu(){
                 type:"web_url",
                 title:"Manila Bulletin",
                 url:"http://mb.com.ph/",
-                webview_height_ratio:"full" // 
+                webview_height_ratio:"full"
               },
               {
                 type:"web_url",
@@ -300,12 +300,7 @@ function makeMenu(){
             title: "Do a postback",
             type: "postback",
             payload: "Top_Level_menu_PostBack"
-          },
-          {
-            title: "Do another postback",
-            type: "postback",
-            payload: "Top_Level_menu_PostBack2"
-          }          
+          },       
         ]
       },
       {
