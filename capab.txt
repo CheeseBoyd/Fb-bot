@@ -1,0 +1,8 @@
+------------------------------------------
+capability:
+* recognize keywords based on word types
+* recognize user name profile (name, profile-pic etc)
+------------------------------------------
+add on in the future
+
+* proper send API library (current send api is too ugly to use and thus disabled)

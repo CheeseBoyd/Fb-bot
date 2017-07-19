@@ -70,7 +70,7 @@ function escapeChars(value) {
 
 greetingText()
 getStarted()
-makeMenu() 
+
 
 
 function receivedMessage(event) {
@@ -87,6 +87,7 @@ function receivedMessage(event) {
   var messageAttachments = message.attachments;
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
+  callUserAPI(senderID)
   if (messageText) {
   speechLoop: {
       for (let key of speechKeys) {
@@ -97,7 +98,8 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){               
-                  sendTextMessage(senderID, sp.getRandomResponse('R_GREET'))                  
+                  sendTextMessage(senderID, sp.getRandomResponse('R_GREET'))
+                  makeMenu()                   
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
@@ -124,27 +126,6 @@ function receivedMessage(event) {
 }
 
 
-
-/* ##############################################################################
-*  TESTING FEED PARSER API 
-*/
-function getFeed(senderID){
-  
-var parser = require('rss-parser');
-
-parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
-  console.log(parsed.feed.title);
-  parsed.feed.entries.forEach(function(entry) {
-
- console.log(Object.getOwnPropertyNames(entry));
-singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "see more");
-
-    console.log(entry.title + ':' + entry.link);
-  })
-}); 
-
-
-}
 
 function sendGenericMessage(recipientId) {
   var messageData = {
@@ -438,7 +419,6 @@ function callSendAPI(messageData) {
     if (!error && response.statusCode == 200) {
       var recipientId = body.recipient_id;
       var messageId = body.message_id;
-
       console.log("Successfully sent generic message with id %s to recipient %s", 
         messageId, recipientId);
     } else {
@@ -459,6 +439,9 @@ function receivedPostback(event) {
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
   var payload = event.postback.payload;
+  if(payload == 'GET_STARTED_PAYLOAD'){
+    sendTextMessage(senderID, "get started payload delivered and filtered");
+  }
   // if payload is radarada... so on.. do this ->
   console.log("Received postback for user %d and page %d with payload '%s' " + 
     "at %d", senderID, recipientID, payload, timeOfPostback);
