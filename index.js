@@ -15,6 +15,7 @@ const sp = require('./speech.js')
 const speech = sp.get() 
 const speechKeys = Object.keys(speech) 
 
+let userMap = null; // Map of user information
 
 
 app.set('port',(process.env.PORT || 5000))
@@ -95,8 +96,7 @@ function receivedMessage(event) {
             let regex = new RegExp(newValue, 'i')
             console.log(regex)
             if(regex.test(messageText)) {
-                if (Object.is(key, 'GREET')){
-                  getUserInfo(senderID, "Hello")                 
+                if (Object.is(key, 'GREET')){               
                   sendTextMessage(senderID, sp.getRandomResponse('R_GREET'))                  
                   break speechLoop;
                 }
@@ -242,8 +242,7 @@ function getStartedButton(messageData){
     }
   })
 
-/* NOTE: To test *this* on messenger you first need to clear the data and any instance of 
-  any previous conversation in order for the button to appear  */
+
 }
 
 function startConvo(messageData){
@@ -268,7 +267,6 @@ function startConvo(messageData){
   })
 }
 
-// "https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN"
 function makeMenu(){
   var messageData = {
     persistent_menu:[
@@ -338,6 +336,34 @@ function showPersitentMenu(messageData){
   })
 
 
+}
+
+/* NOTE: To test 'get-started button' on messenger you first need to clear the data and any instance of 
+  any previous conversation in order for the button to appear  */
+/*
+
+for persistend menu --> make a POST request at https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE
+for get started button --> make a POST request at https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN
+*/
+
+function makeRequests(messageData, method, uri){
+  request({
+    uri: uri,
+    qs: { access_token: access }, 
+    method: method,
+    json: messageData
+  },
+   function(error, response, body){
+    if(!error){
+      console.log(response)    
+    } else {       
+      console.log("Unable to send " + method + " request to " + url)
+      console.log(response)
+      console.log("<---------ERROR MESSAGE START-------------->")
+      console.log(error) 
+      console.log("<----------ERROR MESSAGE END--------------->") 
+    }
+  })  
 } 
 
 /*#################--PRE-LAUNCH CHECKLIST--######################*/
@@ -356,7 +382,7 @@ function sendTextMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
-function getUserInfo(senderID, initalGreetMsg){
+/*function getUserInfo(senderID, initalGreetMsg){
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
     qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
@@ -366,10 +392,8 @@ function getUserInfo(senderID, initalGreetMsg){
     var user = null
     if(!error){
       user = JSON.parse(response.body)
-      console.log('<--------------RESPONSE-------------->')
       console.log(user) 
-      console.log("USER FIRST NAME IS ----> "+user.first_name)
-      console.log('<--------------RESPONSE END-------------->')
+      console.log("Userf first name --> "+user.first_name)
       sendTextMessage(senderID, initalGreetMsg+ " " +user.first_name)
     } else {
       console.log('<--------------FAIL-------------->')        
@@ -380,8 +404,29 @@ function getUserInfo(senderID, initalGreetMsg){
     }
   })
 
-}
+}*/
 
+function callUserAPI(senderID){
+  request({
+    uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
+    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
+    method: 'GET'
+  },
+  function(error, response, body){
+    var user = null
+    if(!error){
+      user = JSON.parse(response.body)
+      console.log(user)
+      userMap = new Map(Object.entries(user))
+      console.log(userMap)
+    } else {      
+      console.log("Unable to call UserAPI")
+      console.log(response)
+      console.log(error)  
+    }
+  })
+
+}
 function callSendAPI(messageData) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
