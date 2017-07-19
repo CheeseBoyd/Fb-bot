@@ -109,7 +109,7 @@ function receivedMessage(event) {
                   sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))
                   sendGenericMessage(senderID)
                   break speechLoop; // gotta be a better way to do this... 
-                } 
+                }   
 
             }
 
@@ -285,7 +285,7 @@ function makeMenu(){
         ]
       },
       {
-        locale:"default",
+        locale:"en_US",
         composer_input_disabled:false
       }
     ]
