@@ -417,7 +417,6 @@ function callUserAPI(senderID){
   },
   function(error, response, body){
     if(!error){
-      console.log(user)
       userMap = new Map(Object.entries(JSON.parse(response.body)))
       console.log(userMap)
     } else {      
