@@ -31,7 +31,7 @@ var send = {
 					text: message
 				}
 			}
-		callSendAPI(messageData, access)	
+		callSendAPI(messageData, this.access)	
 		},
 
 }
