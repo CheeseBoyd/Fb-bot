@@ -12,14 +12,15 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 
-// t
 var send = {
 	access: null,
 
-	grantAccess: (accsess_token) => {
+	grantAccess: function(accsess_token){
 		this access = accsess_token
 		},
-
+	/*
+	* Why does arrow functions not work with 'this'
+	*/
 	sendText: (message, senderID) => {
 		var messageData = 	
 			{
@@ -30,7 +31,7 @@ var send = {
 					text: message
 				}
 			}
-		callSendAPI(messageData, grantAccess)	
+		callSendAPI(messageData, access)	
 		},
 
 }
