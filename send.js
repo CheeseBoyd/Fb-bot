@@ -16,7 +16,7 @@ var send = {
 	access: null,
 
 	grantAccess: function(accsess_token){
-		this access = accsess_token
+		this.access = accsess_token
 		},
 	/*
 	* Why does arrow functions not work with 'this'
