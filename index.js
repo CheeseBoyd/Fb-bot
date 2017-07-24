@@ -327,7 +327,7 @@ function showPersitentMenu(messageData){
    function(error, response, body){
     if(!error){
       console.log('Persistent menu status:')
-      console.log(JSON.parse(response.body))    
+      console.log(response.body)    
     } else {
       console.log('Persistent menu failed: ------------------>')        
       console.log("Unable to send message")
