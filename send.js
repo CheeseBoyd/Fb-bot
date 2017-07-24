@@ -22,6 +22,8 @@ var send = {
 	* Why does arrow functions not work with 'this'
 	*/
 	sendText: (message, senderID) => {
+		console.log(access +'access-----------')
+		console.log(this.access + 'this.access-------')
 		var messageData = 	
 			{
 				recipient:{
