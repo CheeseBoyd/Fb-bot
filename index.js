@@ -11,8 +11,6 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
-const send = require('./send.js')
-const sendAcces = send.grantAccess(access)
 const sp = require('./speech.js')
 const speech = sp.get() 
 const speechKeys = Object.keys(speech) 
@@ -105,8 +103,7 @@ function receivedMessage(event) {
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
-                  // sendTextMessage(senderID, sp.getRandomResponse('R_GOODBYE'))
-                  send.sendText('goodyGoodbye', senderID)
+                  sendTextMessage(senderID, sp.getRandomResponse('R_GOODBYE'))
                   break speechLoop;
                 } else if(Object.is(key, 'INQUIRE')){
                   sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))
