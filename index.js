@@ -106,7 +106,7 @@ function receivedMessage(event) {
                 }
                 else if (Object.is(key, 'GOODBYE')) {
                   // sendTextMessage(senderID, sp.getRandomResponse('R_GOODBYE'))
-                  send.sendText(senderID, 'sendAPI lib works!')
+                  send.sendText(senderID, sp.getRandomResponse('R_GOODBYE'))
                   break speechLoop;
                 } else if(Object.is(key, 'INQUIRE')){
                   sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))
