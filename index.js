@@ -11,11 +11,13 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
+const send = require('./send.js')
 const sp = require('./speech.js')
 const speech = sp.get() 
 const speechKeys = Object.keys(speech) 
 
 let userMap = null; // Map of user information
+
 
 
 app.set('port',(process.env.PORT || 5000))
@@ -72,7 +74,6 @@ greetingText()
 getStarted()
 
 
-
 function receivedMessage(event) {
 
   let senderID = event.sender.id;
@@ -88,6 +89,7 @@ function receivedMessage(event) {
   var wordsLeft = true
   var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
   callUserAPI(senderID)
+  send.grantAccess(access) // grant access to sendAPI library
   if (messageText) {
   speechLoop: {
       for (let key of speechKeys) {
@@ -103,7 +105,8 @@ function receivedMessage(event) {
                   break speechLoop;
                 }
                 else if (Object.is(key, 'GOODBYE')) {
-                  sendTextMessage(senderID, sp.getRandomResponse('R_GOODBYE'))
+                  // sendTextMessage(senderID, sp.getRandomResponse('R_GOODBYE'))
+                  send.sendText(senderID, 'sendAPI lib works!')
                   break speechLoop;
                 } else if(Object.is(key, 'INQUIRE')){
                   sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))

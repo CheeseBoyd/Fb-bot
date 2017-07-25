@@ -18,11 +18,8 @@ var send = {
 	grantAccess: function(accsess_token){
 		this.access = accsess_token
 		},
-	/*
-	* Why does arrow functions not work with 'this'
-	*/
-	sendText: (message, senderID) => {
-		console.log(this.access + 'this.access-------')
+		
+	sendText: function(senderID, message) {
 		var messageData = 	
 			{
 				recipient:{
@@ -33,12 +30,12 @@ var send = {
 				}
 			}
 		callSendAPI(messageData, this.access)	
-		},
+		}
 
 }
 
 
-var callSendAPI = (messageData, access) => {
+function callSendAPI(messageData, access) {
   request({
     uri: 'https://graph.facebook.com/v2.6/me/messages',
     qs: { access_token: access },
