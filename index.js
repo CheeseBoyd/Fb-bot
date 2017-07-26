@@ -1,8 +1,3 @@
-/*
-* Load dependencies and secure access tokens
-*/
-
-
 'use strict'
 
 const express = require('express')
@@ -15,8 +10,8 @@ const send = require('./send.js')
 const sp = require('./speech.js')
 const speech = sp.get() 
 const speechKeys = Object.keys(speech) 
-
-let userMap = null; // Map of user information
+let userMap = null 
+// Map of user information for later use
 
 
 
@@ -37,35 +32,39 @@ app.get('/webhook/', function(req, res) {
 
 
 app.post('/webhook', function (req, res) {
-  var data = req.body;
+  let data = req.body
 
   if (data.object === 'page') {
     data.entry.forEach(function(entry) {
-      var pageID = entry.id;
-      var timeOfEvent = entry.time;
+      let pageID = entry.id
+      let timeOfEvent = entry.time
       entry.messaging.forEach(function(event) {
         if (event.message) {
-          receivedMessage(event);  
+          receivedMessage(event)  
         } else if (event.postback) {
-          receivedPostback(event);
+          receivedPostback(event)
         } else {
-          console.log("Webhook received unknown event: ", event);
+          console.log("Webhook received unknown event: ", event)
         }
-      });
-    });
+      })
+    })
 
     /*
+     From fb: 
+
      Assume all went well.
      You must send back a 200, within 20 seconds, to let us know
      you've successfully received the callback. Otherwise, the request
      will time out and we will keep trying to resend.
     */    
-    res.sendStatus(200);
+    res.sendStatus(200)
   }
-});
+})
+
+// Incase I find the need to escape characters
 
 function escapeChars(value) {
-     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
+     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" )
 }
 
 
@@ -75,23 +74,30 @@ getStarted()
 
 
 function receivedMessage(event) {
-
-  let senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfMessage = event.timestamp;
-  var message = event.message;
+  let senderID = event.sender.id
+  let recipientID = event.recipient.id
+  let timeOfMessage = event.timestamp
+  let message = event.message
   console.log("Received message for user %d and page %d at %d with message:", 
-  senderID, recipientID, timeOfMessage);
-  console.log(JSON.stringify(message));
-  var messageId = message.mid;
-  var messageText = message.text;
-  var messageAttachments = message.attachments;
-  var wordsLeft = true
-  var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
-  callUserAPI(senderID)
+  senderID, recipientID, timeOfMessage)
+  console.log(JSON.stringify(message))
+  let messageId = message.mid
+  let messageText = message.text
+  let messageAttachments = message.attachments
+  let wordsLeft = true
+  let scaffold = ["\\b", 'dummyValue' ,"\\b" ]
+  // callUserAPI(senderID) // will use later
   send.grantAccess(access) // grant access to sendAPI library
+  /*  
+  * Ugly fragile code that works below
+  * gotta be a better way to do this...
+  */
   if (messageText) {
   speechLoop: {
+      /*
+      * Iterates through the keywords
+      * Converts keywords to a regular expression that only finds the keyword in message with whitespace see scaffold for example
+      */
       for (let key of speechKeys) {
           for(let value of speech[key]) {
             scaffold.splice(1, 1, value)
@@ -100,18 +106,16 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  makeMenu()                 
-                  sendTextMessage(senderID, sp.getRandomResponse('R_GREET'))                 
-                  break speechLoop;
+                  makeMenu()
+                  send.sendText(senderID, sp.getRandomResponse('R_GREET'))                                 
+                  break speechLoop
                 }
                 else if (Object.is(key, 'GOODBYE')) {
-                  // sendTextMessage(senderID, sp.getRandomResponse('R_GOODBYE'))
                   send.sendText(senderID, sp.getRandomResponse('R_GOODBYE'))
-                  break speechLoop;
+                  break speechLoop
                 } else if(Object.is(key, 'INQUIRE')){
                   sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))
-                  sendGenericMessage(senderID)
-                  break speechLoop; // gotta be a better way to do this... 
+                  break speechLoop  
                 }   
 
             }
@@ -119,67 +123,22 @@ function receivedMessage(event) {
           }
         }
 
-        wordsLeft = false;
+        wordsLeft = false
   } // End of speech label
-      if(!wordsLeft) { sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)  } 
+      if(!wordsLeft) { 
+        sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)
+        makeMenu()  
+      } 
 
   } else {
-    sendTextMessage(senderID, "Message with attachment received");
+    sendTextMessage(senderID, "Message with attachment received")
   }
 }
 
 
 
-function sendGenericMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [{
-            title: "rift",
-            subtitle: "Next-generation virtual reality",
-            item_url: "https://www.oculus.com/en-us/rift/",               
-            image_url: "http://messengerdemo.parseapp.com/img/rift.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/rift/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
-            }],
-          }, {
-            title: "touch",
-            subtitle: "Your Hands, Now in VR",
-            item_url: "https://www.oculus.com/en-us/touch/",               
-            image_url: "http://messengerdemo.parseapp.com/img/touch.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/touch/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for second bubble",
-            }]
-          }]
-        }
-      }
-    }
-  };  
-
-  callSendAPI(messageData);
-}
 
 /*#################--PRE-LAUNCH CHECKLIST--######################*/
-
-// TEST Greeting text & Get Started button
 
 function greetingText(){
   var messageData = {
@@ -188,11 +147,19 @@ function greetingText(){
       "text":"Say Hello to me!"
     }
   }
-
-  startConvo(messageData)
+  /*
+  * @param
+  * messageData: messageData
+  * method: POST
+  * uri: 'https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN'
+  */
+  makeRequests(messageData, 'POST', 'https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN')
 }
 
-
+/*
+* creates a get started button that is only available for first time 
+* users
+*/
 
 function getStarted(){
   var messageData = { 
@@ -200,56 +167,24 @@ function getStarted(){
       payload:"GET_STARTED_PAYLOAD"
     }
   }
+  /*
+  * @param
+  * messageData: messageData
+  * method: POST
+  * uri: 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=PAGE_ACCESS_TOKEN'
+  */  
 
-  getStartedButton(messageData)
+  makeRequests(messageData, 'POST', 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=PAGE_ACCESS_TOKEN')
 }
 
 
-function getStartedButton(messageData){
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=PAGE_ACCESS_TOKEN',
-    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
-    method: 'POST',
-    json: messageData
-  },
-  function(error, response, body){
-    if(!error){
-      console.log('<--------STARTED BUTTON RESPONSE-------->')
-      console.log(response)
-      console.log('<------STARTED BUTTON RESPONSE END------>')      
-    } else {
-      console.log('<--------------FAILED BUTTON INIT-------------->')        
-      console.log("Unable to send message")
-      console.log(response)
-      console.log(error)
-      console.log('<--------------FAIL BUTTON INIT END-------------->')    
-    }
-  })
-
-
-}
-
-function startConvo(messageData){
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN',
-    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
-    method: 'POST',
-    json: messageData
-  },
-  function(error, response, body){
-    if(!error){
-      console.log('<--------STARTED CONVO RESPONSE-------->')
-      console.log(response)
-      console.log('<------STARTED CONVO RESPONSE END------>')      
-    } else {
-      console.log('<--------------FAILED CONVO INIT-------------->')        
-      console.log("Unable to send message")
-      console.log(response)
-      console.log(error)
-      console.log('<--------------FAIL CONVO INIT END-------------->')    
-    }
-  })
-}
+/*
+* calls persistent menu 
+*
+* Caveats:
+* call_to_actions is limited to 3 items for the top level, and 5 items 
+* for any submenus.
+*/
 
 function makeMenu(){
   var messageData = {
@@ -291,12 +226,7 @@ function makeMenu(){
                 title:"The Manila Times",
                 url:"http://www.manilatimes.net/news/",
                 webview_height_ratio:"full"
-              },
-              {
-                title:"Up to 5 Items Only",
-                type:"postback",
-                payload:"ITEM_5_PAYLOAD"
-              }                            
+              },                           
             ]
           },
           {
@@ -312,44 +242,18 @@ function makeMenu(){
       }
     ]
   }
-  
-  showPersitentMenu(messageData)
+
+  /*
+  * @param
+  * messageData: messageData
+  * method: POST
+  * uri: 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE'
+  */    
+
+  makeRequests(messageData, 'POST', 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE')
 }
 
 
-function showPersitentMenu(messageData){
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE',
-    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
-    method: 'POST',
-    json: messageData
-  },
-   function(error, response, body){
-    if(!error){
-      console.log('Persistent menu status:')
-      console.log(response.body)    
-    } else {
-      console.log('Persistent menu failed: ------------------>')        
-      console.log("Unable to send message")
-      console.log(response)
-      console.log("<---------ERROR MESSAGE START-------------->")
-      console.log(error) 
-      console.log("<----------ERROR MESSAGE END--------------->")    
-    }
-  })
-
-
-}
-
-/* NOTE: To test 'get-started button' on messenger app you first need to clear the data and any instance of 
-  any previous conversation in order for the button to appear
-  OR
-  Use messenger.com
-/*
-
-for persistend menu --> make a POST request at https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE
-for get started button --> make a POST request at https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN
-*/
 
 function makeRequests(messageData, method, uri){
   request({
@@ -361,7 +265,7 @@ function makeRequests(messageData, method, uri){
    function(error, response, body){
     if(!error){
       console.log(method + " request to: " + url)
-      console.log(JSON.parse(response.body))    
+      console.log(response.body)    
     } else {       
       console.log("Unable to send " + method + " request to " + url)
       console.log(response)
@@ -372,50 +276,12 @@ function makeRequests(messageData, method, uri){
   })  
 } 
 
-/*#################--PRE-LAUNCH CHECKLIST--######################*/
 
-
-function sendTextMessage(recipientId, messageText) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: messageText
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-/*function getUserInfo(senderID, initalGreetMsg){
-  request({
-    uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
-    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
-    method: 'GET'
-  },
-  function(error, response, body){
-    var user = null
-    if(!error){
-      user = JSON.parse(response.body)
-      console.log(user) 
-      console.log("Userf first name --> "+user.first_name)
-      sendTextMessage(senderID, initalGreetMsg+ " " +user.first_name)
-    } else {
-      console.log('<--------------FAIL-------------->')        
-      console.log("Unable to send message")
-      console.log(response)
-      console.log(error)
-      console.log('<--------------FAIL END-------------->')    
-    }
-  })
-
-}*/
 
 function callUserAPI(senderID){
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
-    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
+    qs: { access_token: access },
     method: 'GET'
   },
   function(error, response, body){
@@ -430,49 +296,25 @@ function callUserAPI(senderID){
   })
 
 }
-function callSendAPI(messageData) {
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: access },
-    method: 'POST',
-    json: messageData
-
-  }, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var recipientId = body.recipient_id;
-      var messageId = body.message_id;
-      console.log("Successfully sent generic message with id %s to recipient %s", 
-        messageId, recipientId);
-    } else {
-      console.error("Unable to send message.");
-      console.error(response);
-      console.error(error);
-    }
-  });  
-}
-  
 
 
 function receivedPostback(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfPostback = event.timestamp;
+  var senderID = event.sender.id
+  var recipientID = event.recipient.id
+  var timeOfPostback = event.timestamp
 
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
-  var payload = event.postback.payload;
+  var payload = event.postback.payload
   if(payload == 'GET_STARTED_PAYLOAD'){
-    sendTextMessage(senderID, "get started payload delivered and filtered");
     makeMenu() 
     return true
   }
   // if payload is radarada... so on.. do this ->
   console.log("Received postback for user %d and page %d with payload '%s' " + 
-    "at %d", senderID, recipientID, payload, timeOfPostback);
-
-  // When a postback is called, we'll send a message back to the sender to 
-  // let them know it was successful
-  sendTextMessage(senderID, "Postback called");
+    "at %d", senderID, recipientID, payload, timeOfPostback)
+  // log postback string
+  console.log("postback -> " + payload)
 }
 
 
