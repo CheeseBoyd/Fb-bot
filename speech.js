@@ -1,11 +1,14 @@
 /* 
 * How it understands and processes language and simple speech
 */
+
 'use strict'
 
 // Note: Where is a lib that can do this?
 // Need a better way to do this
 // Note: Checkout -> https://wit.ai/docs/recipes#overview-link (for ai references)
+// Note: Checkout -> API.AI
+// Aything that will make user interaction smooth and easy will help out
 
 var speech_class = {
 	words: {

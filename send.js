@@ -50,7 +50,8 @@ var send = {
 		callSendAPI(messageData, this.access)
 	},
 	quickReply: function(senderID, question, option1, option2, option3){
-		var messageData {
+		var messageData = 
+		{
 			recipient:{
 				id: senderID
 			},
