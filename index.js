@@ -264,10 +264,10 @@ function makeRequests(messageData, method, uri){
   },
    function(error, response, body){
     if(!error){
-      console.log(method + " request to: " + url)
+      console.log(method + " request to: " + uri)
       console.log(response.body)    
     } else {       
-      console.log("Unable to send " + method + " request to " + url)
+      console.log("Unable to send " + method + " request to " + uri)
       console.log(response)
       console.log("<---------ERROR MESSAGE START-------------->")
       console.log(error) 
