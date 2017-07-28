@@ -195,35 +195,35 @@ function makeMenu(){
         call_to_actions:[
           {
             type:"web_url",
-            title:"What's new in reddit",
+            title:"reddit",
             url:"https://www.reddit.com",
             webview_height_ratio:"full"
           },        
           {
-            title:"Pick other posts from the web",
+            title:"Other web posts",
             type:"nested",
             call_to_actions:[
               {
                 type:"web_url",
-                title:"From BrainPickings",
+                title:"BrainPickings",
                 url:"https://www.brainpickings.org/",
                 webview_height_ratio:"full"
               },
               {
                 type:"web_url",
-                title:"From Art Of Manliness",
+                title:"Manliness",
                 url:"http://www.philstar.com/",
                 webview_height_ratio:"full"
               },
               {
                 type:"web_url",
-                title:"From The School of Life",
+                title:"SchoolOfLife",
                 url:"https://www.youtube.com/theschooloflifetv",
                 webview_height_ratio:"full"
               },
               {
                 type:"web_url",
-                title:"From the Guardian",
+                title:"Guardian",
                 url:"http://www.manilatimes.net/news/",
                 webview_height_ratio:"full" // https://medium.com/@mpjme
               },                           
@@ -231,7 +231,7 @@ function makeMenu(){
           },
           {
             type:"web_url",
-            title: "Bits from knowledge from a developer",
+            title: "Dev news",
             url:"https://medium.com/@mpjme",
             webview_height_ratio:"full"
           },       
