@@ -252,7 +252,7 @@ function makeMenu(){
 
   makeRequests(messageData, 'POST', 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE')
 }
-
+  
 
 
 function makeRequests(messageData, method, uri){
