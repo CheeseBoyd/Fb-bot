@@ -70,7 +70,7 @@ function escapeChars(value) {
 /*Initial interaction with user*/
 greetingText()
 getStarted()
-
+makeMenu()
 
 function receivedMessage(event) {
   let senderID = event.sender.id
@@ -85,12 +85,13 @@ function receivedMessage(event) {
   let messageAttachments = message.attachments
   let wordsLeft = true
   let scaffold = ["\\b", 'dummyValue' ,"\\b" ]
-  // callUserAPI(senderID) // will use later
+  callUserAPI(senderID)
   send.grantAccess(access) // grant access to sendAPI library
   /*  
   * Ugly fragile code that works below
   * gotta be a better way to do this...
   */
+  makeMenu()
   if (messageText) {
   speechLoop: {
       /*
@@ -105,8 +106,8 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  makeMenu()
-                  send.sendText(senderID, sp.getRandomResponse('R_GREET'))                                 
+                  send.sendText(senderID, sp.getRandomResponse('R_GREET') + " " + userMap.first_name)
+                  send.sendText(senderID, sp.getRandomResponse('R_INTRO'))                                 
                   break speechLoop
                 }
                 else if (Object.is(key, 'GOODBYE')) {
@@ -114,6 +115,7 @@ function receivedMessage(event) {
                   break speechLoop
                 } else if(Object.is(key, 'INQUIRE')){
                   send.sendText(senderID, sp.getRandomResponse('R_INQUIRE'))
+                  send.quickReply(senderID, 'I can help you with these', 'man-news', 'knowledge', 'world news')
                   break speechLoop  
                 }   
 
@@ -125,8 +127,7 @@ function receivedMessage(event) {
         wordsLeft = false
   } // End of speech label
       if(!wordsLeft) { 
-        send.sendText(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)
-        makeMenu()  
+        send.sendText(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText) 
       } 
 
   } else {
@@ -143,7 +144,7 @@ function greetingText(){
   var messageData = {
     setting_type:"greeting",
     greeting:{
-      "text":"Say Hello to me!"
+      "text": "Hello " + userMap.first_name + " what do you need today?"
     }
   }
   /*
@@ -183,6 +184,7 @@ function getStarted(){
 * Caveats:
 * call_to_actions is limited to 3 items for the top level, and 5 items 
 * for any submenus.
+* can only call AOM, the SchoolOfLife or BrainPickings
 */
 
 function makeMenu(){
@@ -194,44 +196,45 @@ function makeMenu(){
         call_to_actions:[
           {
             type:"web_url",
-            title:"r/news",
-            url:"https://www.reddit.com/r/news/",
+            title:"What's new in reddit",
+            url:"https://www.reddit.com",
             webview_height_ratio:"full"
           },        
           {
-            title:"Get local news",
+            title:"Pick other posts from the web",
             type:"nested",
             call_to_actions:[
               {
                 type:"web_url",
-                title:"Manila Bulletin",
-                url:"http://mb.com.ph/",
+                title:"From BrainPickings",
+                url:"https://www.brainpickings.org/",
                 webview_height_ratio:"full"
               },
               {
                 type:"web_url",
-                title:"Philippine Star",
+                title:"From Art Of Manliness",
                 url:"http://www.philstar.com/",
                 webview_height_ratio:"full"
               },
               {
                 type:"web_url",
-                title:"Daily Inquirer",
-                url:"http://www.inquirer.net/",
+                title:"From The School of Life",
+                url:"https://www.youtube.com/theschooloflifetv",
                 webview_height_ratio:"full"
               },
               {
                 type:"web_url",
-                title:"The Manila Times",
+                title:"From the Guardian",
                 url:"http://www.manilatimes.net/news/",
-                webview_height_ratio:"full"
+                webview_height_ratio:"full" // https://medium.com/@mpjme
               },                           
             ]
           },
           {
-            title: "Do a postback",
-            type: "postback",
-            payload: "Top_Level_menu_PostBack"
+            type:"web_url",
+            title: "Bits from knowledge from a developer",
+            url:"https://medium.com/@mpjme",
+            webview_height_ratio:"full"
           },       
         ]
       },
@@ -308,6 +311,8 @@ function receivedPostback(event) {
   if(payload == 'GET_STARTED_PAYLOAD'){
     makeMenu() 
     return true
+  } else {
+    send.sendText(senderID, 'payload noted and payload name is: ' + payload)
   }
   // if payload is radarada... so on.. do this ->
   console.log("Received postback for user %d and page %d with payload '%s' " + 
