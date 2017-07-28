@@ -1,8 +1,3 @@
-/*
-* Load dependencies and secure access tokens
-*/
-
-
 'use strict'
 
 const express = require('express')
@@ -11,9 +6,12 @@ const request = require('request')
 const app = express()
 const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
+const send = require('./send.js')
 const sp = require('./speech.js')
 const speech = sp.get() 
 const speechKeys = Object.keys(speech) 
+let userMap = null 
+// Map of user information for later use
 
 
 
@@ -34,55 +32,72 @@ app.get('/webhook/', function(req, res) {
 
 
 app.post('/webhook', function (req, res) {
-  var data = req.body;
+  let data = req.body
 
   if (data.object === 'page') {
     data.entry.forEach(function(entry) {
-      var pageID = entry.id;
-      var timeOfEvent = entry.time;
+      let pageID = entry.id
+      let timeOfEvent = entry.time
       entry.messaging.forEach(function(event) {
         if (event.message) {
-          receivedMessage(event);  
+          receivedMessage(event)  
         } else if (event.postback) {
-          receivedPostback(event);
+          receivedPostback(event)
         } else {
-          console.log("Webhook received unknown event: ", event);
+          console.log("Webhook received unknown event: ", event)
         }
-      });
-    });
+      })
+    })
 
     /*
+     From fb: 
+
      Assume all went well.
      You must send back a 200, within 20 seconds, to let us know
      you've successfully received the callback. Otherwise, the request
      will time out and we will keep trying to resend.
     */    
-    res.sendStatus(200);
+    res.sendStatus(200)
   }
-});
+})
+
+// Incase I find the need to escape characters
 
 function escapeChars(value) {
-     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
+     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" )
 }
 
 
+/*Initial interaction with user*/
+greetingText()
+getStarted()
+
+
 function receivedMessage(event) {
-
-  let senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfMessage = event.timestamp;
-  var message = event.message;
+  let senderID = event.sender.id
+  let recipientID = event.recipient.id
+  let timeOfMessage = event.timestamp
+  let message = event.message
   console.log("Received message for user %d and page %d at %d with message:", 
-  senderID, recipientID, timeOfMessage);
-  console.log(JSON.stringify(message));
-  var messageId = message.mid;
-  var messageText = message.text;
-  var messageAttachments = message.attachments;
-  var wordsLeft = true
-  var scaffold = ["\\b", 'dummyValue' ,"\\b" ]
-
+  senderID, recipientID, timeOfMessage)
+  console.log(JSON.stringify(message))
+  let messageId = message.mid
+  let messageText = message.text
+  let messageAttachments = message.attachments
+  let wordsLeft = true
+  let scaffold = ["\\b", 'dummyValue' ,"\\b" ]
+  // callUserAPI(senderID) // will use later
+  send.grantAccess(access) // grant access to sendAPI library
+  /*  
+  * Ugly fragile code that works below
+  * gotta be a better way to do this...
+  */
   if (messageText) {
   speechLoop: {
+      /*
+      * Iterates through the keywords
+      * Converts keywords to a regular expression that only finds the keyword in message with whitespace see scaffold for example
+      */
       for (let key of speechKeys) {
           for(let value of speech[key]) {
             scaffold.splice(1, 1, value)
@@ -91,183 +106,215 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  getUserInfo(senderID)                 
-                  sendTextMessage(senderID, "Hey how's the bot doing?") 
-                  break speechLoop;
+                  makeMenu()
+                  send.sendText(senderID, sp.getRandomResponse('R_GREET'))                                 
+                  break speechLoop
                 }
                 else if (Object.is(key, 'GOODBYE')) {
-                  sendTextMessage(senderID, "Goodbye there") 
-                  break speechLoop;
-                }
+                  send.sendText(senderID, sp.getRandomResponse('R_GOODBYE'))
+                  break speechLoop
+                } else if(Object.is(key, 'INQUIRE')){
+                  sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))
+                  break speechLoop  
+                }   
 
             }
 
           }
         }
 
-        wordsLeft = false;
+        wordsLeft = false
   } // End of speech label
-      if(!wordsLeft) { sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)  } 
+      if(!wordsLeft) { 
+        sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)
+        makeMenu()  
+      } 
 
   } else {
-    sendTextMessage(senderID, "Message with attachment received");
+    sendTextMessage(senderID, "Message with attachment received")
   }
 }
 
 
 
-/* ##############################################################################
-*  TESTING FEED PARSER API 
+
+/*#################--PRE-LAUNCH CHECKLIST--######################*/
+
+function greetingText(){
+  var messageData = {
+    setting_type:"greeting",
+    greeting:{
+      "text":"Say Hello to me!"
+    }
+  }
+  /*
+  * @param
+  * messageData: messageData
+  * method: POST
+  * uri: 'https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN'
+  */
+  makeRequests(messageData, 'POST', 'https://graph.facebook.com/v2.6/me/thread_settings?access_token=PAGE_ACCESS_TOKEN')
+}
+
+/*
+* creates a get started button that is only available for first time 
+* users
 */
-function getFeed(senderID){
-  
-var parser = require('rss-parser');
 
-parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
-  console.log(parsed.feed.title);
-  parsed.feed.entries.forEach(function(entry) {
+function getStarted(){
+  var messageData = { 
+    get_started:{
+      payload:"GET_STARTED_PAYLOAD"
+    }
+  }
+  /*
+  * @param
+  * messageData: messageData
+  * method: POST
+  * uri: 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=PAGE_ACCESS_TOKEN'
+  */  
 
- console.log(Object.getOwnPropertyNames(entry));
-// inject output to messenger card
-singleCard(senderID, entry.title, entry.description, entry.link, entry.image, "see more");
-
-    console.log(entry.title + ':' + entry.link);
-  })
-}); 
-
-
+  makeRequests(messageData, 'POST', 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=PAGE_ACCESS_TOKEN')
 }
 
 
-function sendGenericMessage(recipientId) {
+/*
+* calls persistent menu 
+*
+* Caveats:
+* call_to_actions is limited to 3 items for the top level, and 5 items 
+* for any submenus.
+*/
+
+function makeMenu(){
   var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [{
-            title: "rift",
-            subtitle: "Next-generation virtual reality",
-            item_url: "https://www.oculus.com/en-us/rift/",               
-            image_url: "http://messengerdemo.parseapp.com/img/rift.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/rift/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for first bubble",
-            }],
-          }, {
-            title: "touch",
-            subtitle: "Your Hands, Now in VR",
-            item_url: "https://www.oculus.com/en-us/touch/",               
-            image_url: "http://messengerdemo.parseapp.com/img/touch.png",
-            buttons: [{
-              type: "web_url",
-              url: "https://www.oculus.com/en-us/touch/",
-              title: "Open Web URL"
-            }, {
-              type: "postback",
-              title: "Call Postback",
-              payload: "Payload for second bubble",
-            }]
-          }]
-        }
+    persistent_menu:[
+      {
+        locale:"default",
+        composer_input_disabled:true,
+        call_to_actions:[
+          {
+            type:"web_url",
+            title:"r/news",
+            url:"https://www.reddit.com/r/news/",
+            webview_height_ratio:"full"
+          },        
+          {
+            title:"Get local news",
+            type:"nested",
+            call_to_actions:[
+              {
+                type:"web_url",
+                title:"Manila Bulletin",
+                url:"http://mb.com.ph/",
+                webview_height_ratio:"full"
+              },
+              {
+                type:"web_url",
+                title:"Philippine Star",
+                url:"http://www.philstar.com/",
+                webview_height_ratio:"full"
+              },
+              {
+                type:"web_url",
+                title:"Daily Inquirer",
+                url:"http://www.inquirer.net/",
+                webview_height_ratio:"full"
+              },
+              {
+                type:"web_url",
+                title:"The Manila Times",
+                url:"http://www.manilatimes.net/news/",
+                webview_height_ratio:"full"
+              },                           
+            ]
+          },
+          {
+            title: "Do a postback",
+            type: "postback",
+            payload: "Top_Level_menu_PostBack"
+          },       
+        ]
+      },
+      {
+        locale:"en_US",
+        composer_input_disabled:false
       }
-    }
-  };  
+    ]
+  }
 
-  callSendAPI(messageData);
+  /*
+  * @param
+  * messageData: messageData
+  * method: POST
+  * uri: 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE'
+  */    
+
+  makeRequests(messageData, 'POST', 'https://graph.facebook.com/v2.6/me/messenger_profile?access_token=YOUR_ACCESS_TOKEN_HERE')
 }
 
 
-function sendTextMessage(recipientId, messageText) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: messageText
+
+function makeRequests(messageData, method, uri){
+  request({
+    uri: uri,
+    qs: { access_token: access }, 
+    method: method,
+    json: messageData
+  },
+   function(error, response, body){
+    if(!error){
+      console.log(method + " request to: " + uri)
+      console.log(response.body)    
+    } else {       
+      console.log("Unable to send " + method + " request to " + uri)
+      console.log(response)
+      console.log("<---------ERROR MESSAGE START-------------->")
+      console.log(error) 
+      console.log("<----------ERROR MESSAGE END--------------->") 
     }
-  };
+  })  
+} 
 
-  callSendAPI(messageData);
-}
 
-function getUserInfo(senderID){
+
+function callUserAPI(senderID){
   request({
     uri: 'https://graph.facebook.com/v2.6/'+senderID+'?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=PAGE_ACCESS_TOKEN',
-    qs: { access_token: access }, // ----> An active access token must be used to query information about the current user.
+    qs: { access_token: access },
     method: 'GET'
   },
   function(error, response, body){
-    var user = null
     if(!error){
-      user = JSON.parse(response.body)
-      console.log('<--------------RESPONSE-------------->')
-      console.log(user) 
-      console.log("USER FIRST NAME IS ----> "+user.first_name)
-      console.log('<--------------RESPONSE END-------------->')
-      sendTextMessage(senderID, user.first_name + " How 'ya doin'?")
-    } else {
-      console.log('<--------------FAIL-------------->')        
-      console.log("Unable to send message")
+      userMap = new Map(Object.entries(JSON.parse(response.body)))
+      console.log(userMap)
+    } else {      
+      console.log("Unable to call UserAPI")
       console.log(response)
-      console.log(error)
-      console.log('<--------------FAIL END-------------->')    
+      console.log(error)  
     }
   })
 
 }
 
-function callSendAPI(messageData) {
-  request({
-    uri: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: { access_token: access },
-    method: 'POST',
-    json: messageData
-
-  }, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var recipientId = body.recipient_id;
-      var messageId = body.message_id;
-
-      console.log("Successfully sent generic message with id %s to recipient %s", 
-        messageId, recipientId);
-    } else {
-      console.error("Unable to send message.");
-      console.error(response);
-      console.error(error);
-    }
-  });  
-}
-  
-
-/* Test this out by
-   Making the bot understand addiiton e.g 1 + 1 = 2
-*/
 
 function receivedPostback(event) {
-  var senderID = event.sender.id;
-  var recipientID = event.recipient.id;
-  var timeOfPostback = event.timestamp;
+  var senderID = event.sender.id
+  var recipientID = event.recipient.id
+  var timeOfPostback = event.timestamp
 
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
-  var payload = event.postback.payload;
-
+  var payload = event.postback.payload
+  if(payload == 'GET_STARTED_PAYLOAD'){
+    makeMenu() 
+    return true
+  }
+  // if payload is radarada... so on.. do this ->
   console.log("Received postback for user %d and page %d with payload '%s' " + 
-    "at %d", senderID, recipientID, payload, timeOfPostback);
-
-  // When a postback is called, we'll send a message back to the sender to 
-  // let them know it was successful
-  sendTextMessage(senderID, "Postback called");
+    "at %d", senderID, recipientID, payload, timeOfPostback)
+  // log postback string
+  console.log("postback -> " + payload)
 }
 
 

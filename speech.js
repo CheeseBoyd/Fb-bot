@@ -1,75 +1,61 @@
+<<<<<<< HEAD
+=======
+/* 
+* How it understands and processes language and simple speech
+*/
+
+>>>>>>> send-api
 'use strict'
+
+// Note: Where is a lib that can do this?
+// Need a better way to do this
+// Note: Checkout -> https://wit.ai/docs/recipes#overview-link (for ai references)
+// Note: Checkout -> API.AI
+// Aything that will make user interaction smooth and easy will help out
 
 var speech_class = {
 	words: {
-		GREET: ["hello", "how are you?", "hey", "get started"],
-		GOODBYE: ["bye", "goodbye", "see you"]
+		GREET: ["hello", "hi", "hey", "sup"],
+		GOODBYE: ["bye", "goodbye", "see you"],
+		INQUIRE: ["help", "confused", "how", "don't understand"]
+	},
+	response: {
+		R_GREET: ["hello", "Howdy", "hey!", "hola"],
+		R_GOODBYE: ["bye bye", "see ya", "til next time"],
+		R_INQUIRE: ["Hi I'm a just bot and I don't know much . . . yet", "Bear with me"]
+	},
+	getRandomResponse: function(responseType){		
+		var res = this.response
+		if(res[responseType]){
+			return res[responseType][getRandomInt(0, res[responseType].length)]
+		}
 	},
 	get: function(){
-		return this.words;
+		return this.words
 	},
 	logKeyWords: function(){
-		var word = this.words;
+		var word = this.words
 		word.forEach(function(key){
 			word[key].forEach(function(keywords){
-				console.log(keywords);
+				console.log(keywords)
 			})
 		})
 	}
 
-};
-
-
-
-module.exports = speech_class;
-
+}
 
 /*
- // How to use
-// local file module
-const speech = require('./speech.js');
-console.log(speech.get());
-console.log(speech.statement);
-speech.foo();
+* Helper function
+*/
 
-
-
-// Escapes regex
-function escapeRegExp(str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+function getRandomInt(min, max) {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min)) + min
 }
 
 
 
- 
-let speechObj = speech.get();
-let keys = null;
-keys = Object.keys(speechObj);
-console.log("keys: " + keys);
-keys.forEach(function(key) {
-	console.log("Key group array of: " + key);
-	for(let value of speechObj[key]) {
-		console.log("---->"+ value);
-		let regex = new RegExp(value);
-		if(regex.test("goodbye hello hey")) {
-			console.log(regex + " found in array: ---> " + key );
-			switch(key) {
-				case 'GREET':
-					console.log("GREET based response activated");
-					break;
-				case 'GOODBYE':
-					console.log("GOODBYE based response activated");
-					break;
-				default: 
-					console.log("NO AVAILABLE response");
-			}
-
-			// if no match is found break
-			return false
-		}
-
-	}
-});
+module.exports = speech_class
 
 
-*/
