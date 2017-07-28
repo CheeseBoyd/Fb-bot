@@ -144,7 +144,7 @@ function greetingText(){
   var messageData = {
     setting_type:"greeting",
     greeting:{
-      "text": "Hello " + userMap.first_name + " what do you need today?"
+      "text": "Hello what do you need today?"
     }
   }
   /*
