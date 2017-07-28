@@ -106,7 +106,7 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  send.sendText(senderID, sp.getRandomResponse('R_GREET') + " " + userMap.first_name)
+                  send.sendText(senderID, sp.getRandomResponse('R_GREET') + " " + userMap.get(first_name))
                   send.sendText(senderID, sp.getRandomResponse('R_INTRO'))                                 
                   break speechLoop
                 }
@@ -114,7 +114,6 @@ function receivedMessage(event) {
                   send.sendText(senderID, sp.getRandomResponse('R_GOODBYE'))
                   break speechLoop
                 } else if(Object.is(key, 'INQUIRE')){
-                  send.sendText(senderID, sp.getRandomResponse('R_INQUIRE'))
                   send.quickReply(senderID, 'I can help you with these', 'man-news', 'knowledge', 'world news')
                   break speechLoop  
                 }   
