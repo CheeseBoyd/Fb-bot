@@ -106,7 +106,7 @@ function receivedMessage(event) {
             console.log(regex)
             if(regex.test(messageText)) {
                 if (Object.is(key, 'GREET')){
-                  send.sendText(senderID, sp.getRandomResponse('R_GREET') + " " + userMap.get(first_name))
+                  send.sendText(senderID, sp.getRandomResponse('R_GREET') + " " + userMap.get('first_name'))
                   send.sendText(senderID, sp.getRandomResponse('R_INTRO'))                                 
                   break speechLoop
                 }
