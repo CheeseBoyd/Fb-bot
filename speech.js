@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
 /* 
 * How it understands and processes language and simple speech
 */
 
->>>>>>> send-api
 'use strict'
 
 // Note: Where is a lib that can do this?
