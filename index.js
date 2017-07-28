@@ -51,7 +51,6 @@ app.post('/webhook', function (req, res) {
 
     /*
      From fb: 
-
      Assume all went well.
      You must send back a 200, within 20 seconds, to let us know
      you've successfully received the callback. Otherwise, the request
@@ -114,7 +113,7 @@ function receivedMessage(event) {
                   send.sendText(senderID, sp.getRandomResponse('R_GOODBYE'))
                   break speechLoop
                 } else if(Object.is(key, 'INQUIRE')){
-                  sendTextMessage(senderID, sp.getRandomResponse('R_INQUIRE'))
+                  send.sendText(senderID, sp.getRandomResponse('R_INQUIRE'))
                   break speechLoop  
                 }   
 
@@ -126,12 +125,12 @@ function receivedMessage(event) {
         wordsLeft = false
   } // End of speech label
       if(!wordsLeft) { 
-        sendTextMessage(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)
+        send.sendText(senderID, "¯\\_(ツ)_/¯   I don't know what you meant by --    " + messageText)
         makeMenu()  
       } 
 
   } else {
-    sendTextMessage(senderID, "Message with attachment received")
+    send.sendText(senderID, "Message with attachment received")
   }
 }
 

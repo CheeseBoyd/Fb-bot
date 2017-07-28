@@ -55,4 +55,3 @@ function getRandomInt(min, max) {
 
 module.exports = speech_class
 
-
