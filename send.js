@@ -31,6 +31,38 @@ var send = {
 			}
 		callSendAPI(messageData, this.access)	
 	},
+	singleCard: function(senderID, title, subTitle, url, imgUrl, button1) {
+	  var messageData = {
+	    recipient: {
+	      id: recipientId
+	    },
+	    message: {
+	      attachment: {
+	        type: "template",
+	        payload: {
+	          template_type: "generic",
+	          elements: [{
+	            title: title,
+	            subtitle: subTitle,
+	            item_url: url,               
+	            image_url: imgUrl,
+	            buttons: [{
+	              type: "web_url",
+	              url: url,
+	              title: button1
+	            }, {
+	              type: "postback",
+	              title: "Call Postback",
+	              payload: "Payload for first bubble",
+	            }]
+	          }]
+	        }
+	      }
+	    }
+	  };  
+
+	  callSendAPI(messageData, this.access)
+	},
 	sendImage: function(senderID, url){
 		var messageData =
 		{
@@ -61,17 +93,20 @@ var send = {
 					{
 						content_type: 'text',
 						title: option1,
-						payload: 'QUICKREPLY_OPTION1'
+						payload: 'QUICKREPLY_OPTION1',
+						image_url: 'http://www.colorcombos.com/images/colors/FF0000.png'
 					},
 					{
 						content_type: 'text',
 						title: option2,
-						payload: 'QUICKREPLY_OPTION2'
+						payload: 'QUICKREPLY_OPTION2',
+						image_url: 'https://i0.wp.com/www.ucreative.com/wp-content/uploads/2014/12/18-color.png?resize=600%2C450'
 					},
 					{
 						content_type: 'text',
 						title: option3,
-						payload: 'QUICKREPLY_OPTION3'
+						payload: 'QUICKREPLY_OPTION3',
+						image_url: 'http://images.mentalfloss.com/sites/default/files/styles/insert_main_wide_image/public/46346365365.png'
 					}					
 				]
 			}	

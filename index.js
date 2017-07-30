@@ -307,17 +307,22 @@ function receivedPostback(event) {
   // The 'payload' param is a developer-defined field which is set in a postback 
   // button for Structured Messages. 
   var payload = event.postback.payload
-  if(payload == 'GET_STARTED_PAYLOAD'){
-    makeMenu() 
-    return true
-  } else {
-    send.sendText(senderID, 'payload noted and payload name is: ' + payload)
-  }
   // if payload is radarada... so on.. do this ->
+/*  
+  if(payload == 'QUICKREPLY_OPTION1'){
+    send.sendImage(senderID, 'https://www.google.com.ph/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=0ahUKEwj9573Okq7VAhXHiLwKHR2VA0gQjBwIBA&url=https%3A%2F%2Fbloximages.newyork1.vip.townnews.com%2Ftulsaworld.com%2Fcontent%2Ftncms%2Fassets%2Fv3%2Feditorial%2Fe%2F26%2Fe26a3735-5674-5717-a20d-15a2c02c7e40%2F540bb9564fd0c.image.jpg&psig=AFQjCNFlt3MvElAeXFCQ33SyLV5POu_L2Q&ust=1501405746935988')
+  } else if(payload == 'QUICKREPLY_OPTION2'){
+    send.sendImage(senderID, 'https://i2.wp.com/www.brainpickings.org/wp-content/uploads/2012/12/mariapopova_elizabethlippman.jpg?w=600&ssl=1')
+  } else if(payload == 'QUICKREPLY_OPTION3'){
+    send.sendImage(senderID,'https://pbs.twimg.com/profile_images/644583190435352576/3pRBrBdu.jpg')
+  }
+*/
   console.log("Received postback for user %d and page %d with payload '%s' " + 
     "at %d", senderID, recipientID, payload, timeOfPostback)
   // log postback string
   console.log("postback -> " + payload)
+  send.sendText(senderID, 'Postback called')
+  send.sendText(senderID, payload)
 }
 
 
