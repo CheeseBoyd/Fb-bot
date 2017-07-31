@@ -72,7 +72,6 @@ var send = {
 			      type:"template",
 			      payload:{
 			        template_type:"generic",
-			        sharable: true,
 			        elements:[
 			           {
 			            title:"Get today's paper",
