@@ -113,6 +113,7 @@ function receivedMessage(event) {
                 }
                 else if (Object.is(key, 'GOODBYE')) {
                   send.sendText(senderID, sp.getRandomResponse('R_GOODBYE'))
+                  send.sendVideo(senderID,'https://www.youtube.com/watch?v=J6qxMP3deU8')
                   break speechLoop
                 } else if(Object.is(key, 'INQUIRE')){
                   send.quickReply(senderID, 'I can help you with these', 'man-news', 'knowledge', 'world news')

@@ -6,7 +6,7 @@
 
 const parser = require('rss-parser')
 
-function getFeed(senderID){
+var getFeed = function(senderID){
 	parser.parseURL('https://www.reddit.com/.rss', function(err, parsed) {
 		console.log(parsed.feed.title)
 		parsed.feed.entries.forEach(function(entry) {
@@ -22,3 +22,5 @@ function getFeed(senderID){
 			  })
 		}) 
 }
+
+module.exports = getFeed

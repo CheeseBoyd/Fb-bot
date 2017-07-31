@@ -112,6 +112,23 @@ var send = {
 		}
 		callSendAPI(messageData, this.access)
 	},
+	sendVideo: function(senderID, url){
+		var messageData =
+		{
+		  "recipient":{
+		    "id":senderID
+		  },
+		  "message":{
+		    "attachment":{
+		      "type":"video",
+		      "payload":{
+		        "url": url
+		      }
+		    }
+		  }
+		}
+		callSendAPI(messageData, this.access)
+	},
 	quickReply: function(senderID, question, option1, option2, option3){
 		var messageData = 
 		{
