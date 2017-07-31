@@ -63,44 +63,44 @@ var send = {
 	},
 	singleCard: function(senderID) {
 	  	var messageData = 
-			{
-			  recipient:{
-			    id:senderID
-			  },
-			  message:{
-			    attachment:{
-			      type:"template",
-			      payload:{
-			        template_type:"generic",
-			        elements:[
-			           {
-			            title:"Get today's paper",
-			            image_url:"https://static01.nyt.com/images/icons/t_logo_291_black.png",
-			            subtitle:"Check this out!",
-			            default_action: {
-			              type: "web_url",
-			              url: "https://www.nytimes.com/pages/todayspaper/index.html",
-			              messenger_extensions: false,
-			              webview_height_ratio: "tall",
-			              fallback_url: "http://www.nytimes.com/pages/todayspaper/index.html"
-			            },
-			            buttons:[
-			              {
-			                type:"web_url",
-			                url:"https://www.nytimes.com/pages/todayspaper/index.html",
-			                title:"View Website"
-			              },{
-			                type:"postback",
-			                title:"Deliver postback",
-			                payload:"DEVELOPER_DEFINED_PAYLOAD"
-			              }              
-			            ]      
-			          }
-			        ]
-			      }
-			    }
-			  }
-			}	  
+		{
+		  "recipient":{
+		    "id":senderID
+		  },
+		  "message":{
+		    "attachment":{
+		      "type":"template",
+		      "payload":{
+		        "template_type":"generic",
+		        "elements":[
+		           {
+		            "title":"Welcome to Peter\'s Hats",
+		            "image_url":"https://petersfancybrownhats.com/company_image.png",
+		            "subtitle":"We\'ve got the right hat for everyone.",
+		            "default_action": {
+		              "type": "web_url",
+		              "url": "https://peterssendreceiveapp.ngrok.io/view?item=103",
+		              "messenger_extensions": true,
+		              "webview_height_ratio": "tall",
+		              "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+		            },
+		            "buttons":[
+		              {
+		                "type":"web_url",
+		                "url":"https://petersfancybrownhats.com",
+		                "title":"View Website"
+		              },{
+		                "type":"postback",
+		                "title":"Start Chatting",
+		                "payload":"DEVELOPER_DEFINED_PAYLOAD"
+		              }              
+		            ]      
+		          }
+		        ]
+		      }
+		    }
+		  }
+		}	  
 
 	  callSendAPI(messageData, this.access)
 	},
