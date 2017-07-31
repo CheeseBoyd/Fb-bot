@@ -14,13 +14,15 @@ var speech_class = {
 	words: {
 		GREET: ["hello", "hi", "hey", "what's up", "sup", "hola"],
 		GOODBYE: ["bye", "goodbye", "see you","bye-bye"],
-		INQUIRE: ["help", "confused", "how", "don't understand"]
+		INQUIRE: ["help", "confused", "how", "don't understand"],
+		NEWS: ["news", "news", "what's going on", "headline", "headlines"]
 	},
 	response: {
 		R_GREET: ["hello", "Howdy", "hey!", "hola"],
 		R_INTRO: ["Hello I can get you the latest posts from AOM, BrainPickings or the School of Life"],
 		R_GOODBYE: ["bye bye", "see you", "til next time", "Allright, take care now :)"],
-		R_INQUIRE: ["What do you need help with?", "Anything you wish to know?", "How may I help you?"]
+		R_INQUIRE: ["What do you need help with?", "Anything you wish to know?", "How may I help you?"],
+		R_NEWS: ["Here are the news that I can find for you", "The latest news from the web", "Check out this news article"]
 	},
 	getRandomResponse: function(responseType){		
 		var res = this.response

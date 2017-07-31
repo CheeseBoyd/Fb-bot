@@ -18,7 +18,37 @@ var send = {
 	grantAccess: function(accsess_token){
 		this.access = accsess_token
 	},
-		
+	buttonTemplate: function(senderID, qeustion){
+		var messageData = 
+		{
+		  recipient:{
+		    id: senderID
+		  },
+		  message:{
+		    attachment:{
+		      type:"template",
+		      payload:{
+		        template_type:"button",
+		        text:"What do you want to do next?",
+		        buttons:[
+		          {
+		            type:"web_url",
+		            url:"http://example.com/",
+		            title:"Show example.com"
+		          },
+		          {
+		            type:"postback",
+		            title:"Start Chatting",
+		            payload:"USER_DEFINED_PAYLOAD"
+		          }
+		        ]
+		      }
+		    }
+		  }
+		}
+		callSendAPI(messageData, this.access)
+
+	},	
 	sendText: function(senderID, message) {
 		var messageData = 	
 			{
@@ -31,35 +61,47 @@ var send = {
 			}
 		callSendAPI(messageData, this.access)	
 	},
-	singleCard: function(senderID, title, subTitle, url, imgUrl, button1) {
-	  var messageData = {
-	    recipient: {
-	      id: recipientId
-	    },
-	    message: {
-	      attachment: {
-	        type: "template",
-	        payload: {
-	          template_type: "generic",
-	          elements: [{
-	            title: title,
-	            subtitle: subTitle,
-	            item_url: url,               
-	            image_url: imgUrl,
-	            buttons: [{
-	              type: "web_url",
-	              url: url,
-	              title: button1
-	            }, {
-	              type: "postback",
-	              title: "Call Postback",
-	              payload: "Payload for first bubble",
-	            }]
-	          }]
-	        }
-	      }
-	    }
-	  };  
+	singleCard: function(senderID) {
+	  	var messageData = 
+			{
+			  recipient:{
+			    id:senderID
+			  },
+			  message:{
+			    attachment:{
+			      type:"template",
+			      payload:{
+			        template_type:"generic",
+			        sharable: true,
+			        elements:[
+			           {
+			            title:"Get today's paper",
+			            image_url:"https://static01.nyt.com/images/icons/t_logo_291_black.png",
+			            subtitle:"Check this out!",
+			            default_action: {
+			              type: "web_url",
+			              url: "http://www.nytimes.com/pages/todayspaper/index.html",
+			              messenger_extensions: true,
+			              webview_height_ratio: "tall",
+			              fallback_url: "http://www.nytimes.com/pages/todayspaper/index.html"
+			            },
+			            buttons:[
+			              {
+			                type:"web_url",
+			                url:"http://www.nytimes.com/pages/todayspaper/index.html",
+			                title:"View Website"
+			              },{
+			                type:"postback",
+			                title:"Deliver postback",
+			                payload:"DEVELOPER_DEFINED_PAYLOAD"
+			              }              
+			            ]      
+			          }
+			        ]
+			      }
+			    }
+			  }
+			}	  
 
 	  callSendAPI(messageData, this.access)
 	},

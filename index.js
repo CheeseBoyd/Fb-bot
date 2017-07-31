@@ -8,6 +8,7 @@ const token = process.env.FB_VERIFY_TOKEN
 const access = process.env.FB_ACCESS_TOKEN
 const send = require('./send.js')
 const sp = require('./speech.js')
+const feed = require('./npm_tools.js')
 const speech = sp.get() 
 const speechKeys = Object.keys(speech) 
 let userMap = null 
@@ -116,7 +117,11 @@ function receivedMessage(event) {
                 } else if(Object.is(key, 'INQUIRE')){
                   send.quickReply(senderID, 'I can help you with these', 'man-news', 'knowledge', 'world news')
                   break speechLoop  
-                }   
+                } else if(Object.is(key, 'NEWS')){
+                  send.sendText(senderID, sp.getRandomResponse('R_NEWS'))
+                  send.singleCard(senderID)
+                  break speechLoop
+                }  
 
             }
 
