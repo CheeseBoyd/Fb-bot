@@ -80,7 +80,7 @@ var send = {
 			            default_action: {
 			              type: "web_url",
 			              url: "https://www.nytimes.com/pages/todayspaper/index.html",
-			              messenger_extensions: true,
+			              messenger_extensions: false,
 			              webview_height_ratio: "tall",
 			              fallback_url: "http://www.nytimes.com/pages/todayspaper/index.html"
 			            },
