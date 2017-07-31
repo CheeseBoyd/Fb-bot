@@ -79,7 +79,7 @@ var send = {
 			            subtitle:"Check this out!",
 			            default_action: {
 			              type: "web_url",
-			              url: "http://www.nytimes.com/pages/todayspaper/index.html",
+			              url: "https://www.nytimes.com/pages/todayspaper/index.html",
 			              messenger_extensions: true,
 			              webview_height_ratio: "tall",
 			              fallback_url: "http://www.nytimes.com/pages/todayspaper/index.html"
@@ -87,7 +87,7 @@ var send = {
 			            buttons:[
 			              {
 			                type:"web_url",
-			                url:"http://www.nytimes.com/pages/todayspaper/index.html",
+			                url:"https://www.nytimes.com/pages/todayspaper/index.html",
 			                title:"View Website"
 			              },{
 			                type:"postback",
