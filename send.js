@@ -90,8 +90,7 @@ var send = {
 		        }
 		      }
 		    }
-		  }
-		}	  
+		  }	  
 
 	  callSendAPI(messageData, this.access)
 	},
