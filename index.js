@@ -1,5 +1,5 @@
 'use strict'
-
+// Note: Get vs Code
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
@@ -13,7 +13,6 @@ const speech = sp.get()
 const speechKeys = Object.keys(speech) 
 let userMap = null 
 // Map of user information for later use
-
 
 
 app.set('port',(process.env.PORT || 5000))
