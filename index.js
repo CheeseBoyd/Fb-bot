@@ -1,5 +1,5 @@
 'use strict'
-// Note: Get vs Code
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
@@ -96,7 +96,8 @@ function receivedMessage(event) {
   speechLoop: {
       /*
       * Iterates through the keywords
-      * Converts keywords to a regular expression that only finds the keyword in message with whitespace see scaffold for example
+      * Converts keywords to a regular expression that only finds the keyword in message with whitespace 
+      * see scaffold for example
       */
       for (let key of speechKeys) {
           for(let value of speech[key]) {
